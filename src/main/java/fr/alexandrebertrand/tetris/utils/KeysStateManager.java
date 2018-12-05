@@ -16,8 +16,10 @@ public class KeysStateManager {
      * Attributes
      */
 
+    /** Pressed keys */
     private static HashMap<Integer, Boolean> pressedKeys;
 
+    /** Already pressed keys */
     private static HashMap<Integer, Boolean> alreadyPressedKeys;
 
     /*
@@ -30,20 +32,16 @@ public class KeysStateManager {
     public KeysStateManager() {
         pressedKeys = new HashMap<>();
         alreadyPressedKeys = new HashMap<>();
-        for (int i = 0; i < 124; i++) {
-            pressedKeys.put(i, false);
-            alreadyPressedKeys.put(i, false);
-        }
         KeyboardFocusManager.getCurrentKeyboardFocusManager()
                 .addKeyEventDispatcher((KeyEvent ke) -> {
             synchronized (KeysStateManager.class) {
                 switch (ke.getID()) {
                     case KeyEvent.KEY_PRESSED:
-                        pressedKeys.replace(ke.getKeyCode(), true);
+                        pressedKeys.put(ke.getKeyCode(), true);
                         break;
                     case KeyEvent.KEY_RELEASED:
-                        pressedKeys.replace(ke.getKeyCode(), false);
-                        alreadyPressedKeys.replace(ke.getKeyCode(), false);
+                        pressedKeys.put(ke.getKeyCode(), false);
+                        alreadyPressedKeys.put(ke.getKeyCode(), false);
                         break;
                 }
                 return false;

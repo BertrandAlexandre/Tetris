@@ -31,7 +31,6 @@ import java.util.function.Supplier;
 import javafx.scene.media.MediaPlayer;
 
 import javax.swing.JPanel;
-import javax.swing.Timer;
 
 /**
  * Board of the game
@@ -42,9 +41,6 @@ public final class Board extends JPanel implements ActionListener {
     /*
      * Constants
      */
-    
-    /** Timer for game animations */
-    private final Timer TIMER;
     
     /** Music reader of the game */
     private final SoundReader MUSIC_READER;
@@ -140,11 +136,11 @@ public final class Board extends JPanel implements ActionListener {
     public Board() {
         getSettings();
         BOARD_DIM = new Dimension(
-                Board.BOX_SIZE * settings.getXCases(),
-                Board.BOX_SIZE * settings.getYCases()
+                Board.BOX_SIZE * Settings.xCases,
+                Board.BOX_SIZE * Settings.yCases
         );
-        MUSIC_READER = new SoundReader(settings.getMusicsVolume(), "musics/");
-        EFFECT_READER = new SoundReader(settings.getEffectsVolume(), "effects/");
+        MUSIC_READER = new SoundReader(Settings.musicsVolume, "musics/");
+        EFFECT_READER = new SoundReader(Settings.effectsVolume, "effects/");
         keysStateManager = new KeysStateManager();
         loadSounds();
         CASE_COLOR_SET = new CaseColorSet();
@@ -154,9 +150,6 @@ public final class Board extends JPanel implements ActionListener {
         initGame();
         initBoard();
         initFont();
-        int ms = (int) Math.round(1000d / settings.getFrapsPerSeconds());
-        TIMER = new Timer(ms, this);
-        TIMER.start();
     }
     
     /*
@@ -186,8 +179,8 @@ public final class Board extends JPanel implements ActionListener {
      * Initialize suppliers
      */
     private void initSuppliers() {
-        final int x = settings.getXCases();
-        final int y = settings.getYCases();
+        final int x = Settings.xCases;
+        final int y = Settings.yCases;
         suppliers = new ArrayList<>();
         suppliers.add(() -> new PieceA(x, y));
         suppliers.add(() -> new PieceB(x, y));
@@ -251,8 +244,8 @@ public final class Board extends JPanel implements ActionListener {
         MUSIC_READER.destroyAllPlayers();
         MUSIC_READER.play("theme.mp3", MediaPlayer.INDEFINITE);
         grid = new ArrayList<>();
-        for (int i = 0; i < settings.getYCases(); i++) {
-            grid.add(new Line(settings.getXCases()));
+        for (int i = 0; i < Settings.yCases; i++) {
+            grid.add(new Line(Settings.xCases));
         }
         int r = (int) (Math.random() * suppliers.size());
         currentPiece = (Piece) suppliers.get(r).get();
@@ -330,15 +323,15 @@ public final class Board extends JPanel implements ActionListener {
         
         // Init grid cases
         g.setColor(Color.BLACK);
-        for (int i = 0; i < settings.getXCases(); i++) {
-            for (int j = 0; j < settings.getYCases(); j++) {
+        for (int i = 0; i < Settings.xCases; i++) {
+            for (int j = 0; j < Settings.yCases; j++) {
                 fillBorderRect(g, new Point(i, j));
             }
         }
         
         // Paint grid lines
-        for (int i = 0; i < settings.getYCases(); i++) {
-            for (int j = 0; j < settings.getXCases(); j++) {
+        for (int i = 0; i < Settings.yCases; i++) {
+            for (int j = 0; j < Settings.xCases; j++) {
                 if (grid.get(i).getPoints().get(j) != 0) {
                     g.setColor(CASE_COLOR_SET.getCaseColors().get(
                             grid.get(i).getPoints().get(j) - 1
@@ -392,7 +385,7 @@ public final class Board extends JPanel implements ActionListener {
             // Paint stored piece
             Point sp = new Point();
             sp.setLocation(
-                    settings.getXCases() * bs + 40d
+                    Settings.xCases * bs + 40d
                             + (4 - storedPiece.getPieceWidth()) * (bs / 2),
                     220d - (2 - storedPiece.getPieceHeight()) * (bs / 2)
             );
@@ -409,7 +402,7 @@ public final class Board extends JPanel implements ActionListener {
         for (int i = 0; i < 3; i++) {
             Point np = new Point();
             np.setLocation(
-                    settings.getXCases() * bs + 40d
+                    Settings.xCases * bs + 40d
                             + (4 - nextPiece.get(i).getPieceWidth()) * (bs / 2),
                     285d - (2 - nextPiece.get(i).getPieceHeight()) * (bs / 2)
                             + i * (bs * 2 + 10) + bs * 2
@@ -556,7 +549,7 @@ public final class Board extends JPanel implements ActionListener {
                     });
                     int nbRemove = 0;
                     boolean newLevel = false;
-                    for (int j = settings.getYCases() - 1; j >= 0; j--) {
+                    for (int j = Settings.yCases - 1; j >= 0; j--) {
                         if (grid.get(j).isClear()) {
                             grid.remove(j);
                             nbRemove++;
@@ -579,7 +572,7 @@ public final class Board extends JPanel implements ActionListener {
                         fixTime = fallingTime * 2;
                     }
                     for (int j = 0; j < nbRemove; j++) {
-                        grid.add(0, new Line(settings.getXCases()));
+                        grid.add(0, new Line(Settings.xCases));
                     }
                     initNextPiece();
                     hasSwiched = false;
