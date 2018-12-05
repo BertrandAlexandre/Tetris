@@ -49,6 +49,7 @@ public final class SoundReader {
 
     /**
      * Default constructor to initialise medias and players
+     * 
      * @param volume Volume of sounds
      * @param prefix Prefix of the sound ressources directory
      */
@@ -66,6 +67,7 @@ public final class SoundReader {
 
     /**
      * Read a sound with loop
+     * 
      * @param fileName Filename of the sound
      * @param nbLoop   Number of loop to play sound
      */
@@ -90,6 +92,7 @@ public final class SoundReader {
 
     /**
      * Load a sound resource
+     * 
      * @param fileName File name of the sound
      */
     public void loadResource(String fileName) {

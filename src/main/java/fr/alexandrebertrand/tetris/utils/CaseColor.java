@@ -52,8 +52,9 @@ public enum CaseColor {
      */
 
     /**
-     * Initialize new constant
-     * representing a set of color for a case
+     * Initialize new constant representing a set of
+     * color for a case
+     * 
      * @param value       Value of the color set
      * @param color       Color of the case
      * @param borderColor Border color of the case
@@ -70,6 +71,7 @@ public enum CaseColor {
 
     /**
      * Get the value of the casecolor
+     * 
      * @return Value of the casecolor
      */
     public int getValue() {
@@ -78,6 +80,7 @@ public enum CaseColor {
 
     /**
      * Get the main color of the casecolor
+     * 
      * @return Main color of the casecolor
      */
     public Color getColor() {
@@ -86,6 +89,7 @@ public enum CaseColor {
 
     /**
      * Get the border color of the casecolor
+     * 
      * @return Border color of the casecolor
      */
     public Color getBorderColor() {

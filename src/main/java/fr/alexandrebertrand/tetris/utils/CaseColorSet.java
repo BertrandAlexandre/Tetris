@@ -40,6 +40,7 @@ public class CaseColorSet {
 
     /**
      * Add a color to colorset
+     * 
      * @param caseColor Color to add
      */
     public void addCaseColor(CaseColor caseColor) {
@@ -52,6 +53,7 @@ public class CaseColorSet {
 
     /**
      * Get colorset
+     * 
      * @return Return list of colors of colorset
      */
     public ArrayList<CaseColor> getCaseColors() {

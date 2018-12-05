@@ -29,6 +29,7 @@ public class PieceB extends Piece {
 
     /**
      * Main constructor of the B piece type
+     * 
      * @param xCases Width of the grid (number of cases on the x axe)
      * @param yCases Height of the grid (number of cases on the y axe)
      */
@@ -81,6 +82,7 @@ public class PieceB extends Piece {
 
     /**
      * Get rotation operations of the B piece type
+     * 
      * @return Rotation operation
      */
     @Override
@@ -90,6 +92,7 @@ public class PieceB extends Piece {
 
     /**
      * Get the initial position of the B piece type
+     * 
      * @return Initial position
      */
     @Override

@@ -31,11 +31,14 @@ public class Piece {
     
     /** Position of the gost */
     private final List<Point> gostPoints;
-        
+    
+    /** Current rotation state of the piece */
     protected int curRotation;
     
+    /** Space beetween piece and left edge of the board */
     private final int leftSpace;
     
+    /** Color value of the piece */
     protected int colorValue;
             
     /*
@@ -44,6 +47,7 @@ public class Piece {
     
     /**
      * Default constructor
+     * 
      * @param xCases Number of X cases
      * @param yCases Number of Y cases
      */
@@ -61,14 +65,30 @@ public class Piece {
      * Methods
      */
     
+    /**
+     * 
+     * 
+     * @return
+     */
     protected List<List<Point>> getRotationOperations() {
         return null;
     }
     
+    /**
+     * 
+     * 
+     * @return
+     */
     protected List<Point> getInitialPosition() {
         return null;
     }
     
+    /**
+     * 
+     * 
+     * @param points
+     * @return
+     */
     protected static List<Point> getInversedPoint(List<Point> points) {
         List<Point> i = new ArrayList<>();
         for (Point p: points) {
@@ -80,6 +100,12 @@ public class Piece {
         return i;
     }
     
+    /**
+     * 
+     * 
+     * @param grid
+     * @return
+     */
     public boolean initPosition(ArrayList<Line> grid) {
         boolean firstFailled = false;
         points.clear();
@@ -108,15 +134,29 @@ public class Piece {
         return true;
     }
     
+    /**
+     * 
+     * 
+     * @param grid
+     * @return
+     */
     public boolean canDown(ArrayList<Line> grid) {
         return points.stream().noneMatch((p) -> (p.y + 1 >= Y_CASES ||
                 grid.get(p.y + 1).getPoints().get(p.x) != 0));
     }
     
+    /**
+     * 
+     */
     public void down() {
         points.forEach((p) -> p.y++);
     }
     
+    /**
+     * 
+     * 
+     * @return
+     */
     public int fix() {
         int diff = this.gostPoints.get(0).y - points.get(0).y;
         points.clear();
@@ -124,6 +164,13 @@ public class Piece {
         return diff;
     }
 
+    /**
+     * 
+     * 
+     * @param xDirection
+     * @param grid
+     * @return
+     */
     public boolean setXDirection(int xDirection, ArrayList<Line> grid) {
         boolean isMovable = true;
         for (Point p : points) {
@@ -140,6 +187,9 @@ public class Piece {
         return isMovable;
     }
     
+    /**
+     * 
+     */
     public boolean rotateLeft(ArrayList<Line> grid) {
         if (getRotationOperations() == null) {
             return true;
@@ -149,6 +199,12 @@ public class Piece {
         return rotate(grid, c, n);
     }
     
+    /**
+     * 
+     * 
+     * @param grid
+     * @return
+     */
     public boolean rotateRight(ArrayList<Line> grid) {
         if (getRotationOperations() == null) {
             return true;
@@ -158,6 +214,14 @@ public class Piece {
         return rotate(grid, c, n);
     }
     
+    /**
+     * 
+     * 
+     * @param grid
+     * @param c
+     * @param n
+     * @return
+     */
     private boolean rotate(ArrayList<Line> grid, int c, int n) {
         boolean failled = false;
         int xDec = 0;
@@ -229,12 +293,20 @@ public class Piece {
         return true;
     }
     
+    /**
+     * 
+     */
     public final void setPointsAsInitial() {
         curRotation = 0;
         points.clear();
         getInitialPosition().forEach((p) -> points.add(p));
     }
     
+    /**
+     * 
+     * 
+     * @param grid
+     */
     private void setGostPointsPosition(ArrayList<Line> grid) {
         int h = Y_CASES - getMinHeightPoint();
         boolean intersect = false;
@@ -256,6 +328,11 @@ public class Piece {
         }
     }
     
+    /**
+     * 
+     * 
+     * @return
+     */
     private int getMinHeightPoint() {
         int m = points.get(0).y;
         for (Point p : points) {
@@ -270,10 +347,20 @@ public class Piece {
      * Getters & Setters
      */
 
+    /**
+     * Get points of the piece
+     * 
+     * @return Points of the piece
+     */
     public List<Point> getPoints() {
         return points;
     }
     
+    /**
+     * Get width of the piece
+     * 
+     * @return Width of the piece
+     */
     public int getPieceWidth() {
         int min = points.get(0).x;
         int max = points.get(0).x;
@@ -287,6 +374,11 @@ public class Piece {
         return max - min + 1;
     }
     
+    /**
+     * Get height of the piece
+     * 
+     * @return Height of the piece
+     */
     public int getPieceHeight() {
         int min = points.get(0).y;
         int max = points.get(0).y;
@@ -300,10 +392,20 @@ public class Piece {
         return max - min + 1;
     }
     
+    /**
+     * Get points of the gost piece
+     * 
+     * @return Points of the gost piece
+     */
     public List<Point> getGostPoints() {
         return gostPoints;
     }
     
+    /**
+     * Get color value of the piece
+     * 
+     * @return Color value of the piece
+     */
     public int getColorValue() {
         return colorValue;
     }

@@ -26,6 +26,7 @@ public class PieceD extends Piece {
 
     /**
      * Main constructor of the D piece type
+     * 
      * @param xCases Width of the grid (number of cases on the x axe)
      * @param yCases Height of the grid (number of cases on the y axe)
      */
@@ -55,6 +56,7 @@ public class PieceD extends Piece {
 
     /**
      * Get the initial position of the F piece type
+     * 
      * @return Initial position
      */
     @Override

@@ -22,6 +22,7 @@ public class Line {
 
     /**
      * Default constructor
+     * 
      * @param xCases Number of X cases
      */
     public Line(int xCases) {
@@ -37,6 +38,7 @@ public class Line {
 
     /**
      * Know if the line is clear
+     * 
      * @return true if the line is clear
      */
     public boolean isClear() {
@@ -45,6 +47,7 @@ public class Line {
 
     /**
      * Update points of the line
+     * 
      * @param x Index of the point
      * @param v Value if the point
      */
@@ -56,6 +59,11 @@ public class Line {
      * Getter
      */
 
+    /**
+     * Get points of the line
+     * 
+     * @return Points of the line
+     */
     public ArrayList<Integer> getPoints() {
         return points;
     }

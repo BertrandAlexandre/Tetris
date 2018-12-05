@@ -16,6 +16,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.font.TextAttribute;
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,8 +61,10 @@ public final class Board extends JPanel implements ActionListener {
     /** Minimal box size */
     private static final int BOX_SIZE = 30;
     
-    private static final long DELAY_BETWEN_MOVES = 200;
-    
+    /** Delay between to moves */
+    private static final long DELAY_BETWEEN_MOVES = 200;
+
+    /** key state manager */
     private final KeysStateManager keysStateManager;
     
     /*
@@ -142,6 +145,7 @@ public final class Board extends JPanel implements ActionListener {
         );
         MUSIC_READER = new SoundReader(settings.getMusicsVolume(), "musics/");
         EFFECT_READER = new SoundReader(settings.getEffectsVolume(), "effects/");
+        keysStateManager = new KeysStateManager();
         loadSounds();
         CASE_COLOR_SET = new CaseColorSet();
         initRotationOperations();
@@ -150,7 +154,6 @@ public final class Board extends JPanel implements ActionListener {
         initGame();
         initBoard();
         initFont();
-        keysStateManager = new KeysStateManager();
         int ms = (int) Math.round(1000d / settings.getFrapsPerSeconds());
         TIMER = new Timer(ms, this);
         TIMER.start();
@@ -607,81 +610,81 @@ public final class Board extends JPanel implements ActionListener {
      */
     private void manageKeys() {
         if (!gameOver) {
-            if (KeysStateManager.isUpPressed() && 
-                    !KeysStateManager.isUpAlreadyPressed()) {
-                KeysStateManager.setUpAlreadyPressed(true);
+            if (KeysStateManager.isPressed(KeyEvent.VK_UP) && 
+                    !KeysStateManager.isAlreadyPressed(KeyEvent.VK_UP)) {
+                KeysStateManager.setAlreadyPressed(KeyEvent.VK_UP, true);
                 if (currentPiece.rotateRight(grid)) {
                     EFFECT_READER.play("rotate.mp3", 1);
                     sinceLastMove = LocalTime.now();
                 }
             }
-            if (KeysStateManager.isDownPressed()) {
+            if (KeysStateManager.isPressed(KeyEvent.VK_DOWN)) {
                 if (lastDown != null) {
                     bufferDown += lastDown
                             .until(LocalTime.now(), ChronoUnit.MILLIS);
                 }
                 lastDown = LocalTime.now();
-                if (bufferDown > DELAY_BETWEN_MOVES ||
-                        !KeysStateManager.isDownAlreadyPressed()) {
+                if (bufferDown > DELAY_BETWEEN_MOVES ||
+                        !KeysStateManager.isAlreadyPressed(KeyEvent.VK_DOWN)) {
                     bufferDown = 0;
                     if (currentPiece.canDown(grid)) {
                         currentPiece.down();
-                        if (!KeysStateManager.isDownAlreadyPressed()) {
+                        if (!KeysStateManager.isAlreadyPressed(KeyEvent.VK_DOWN)) {
                             EFFECT_READER.play("move.mp3", 1);
                         }
                         timeBufer = 0;
                         score += 1;
-                        KeysStateManager.setDownAlreadyPressed(true);
+                        KeysStateManager.setAlreadyPressed(KeyEvent.VK_DOWN, true);
                     } else if (sincePieceDown == null) {
                         sincePieceDown = LocalTime.now();
                         sinceLastMove = LocalTime.now();
                     }
                 }
             }
-            if (KeysStateManager.isLeftPressed()) {
+            if (KeysStateManager.isPressed(KeyEvent.VK_LEFT)) {
                if (lastLeft != null) {
                     bufferLeft += lastLeft
                             .until(LocalTime.now(), ChronoUnit.MILLIS);
                 }
                 lastLeft = LocalTime.now();
-                if (bufferLeft > DELAY_BETWEN_MOVES ||
-                        !KeysStateManager.isLeftAlreadyPressed()) {
+                if (bufferLeft > DELAY_BETWEEN_MOVES ||
+                        !KeysStateManager.isAlreadyPressed(KeyEvent.VK_LEFT)) {
                     bufferLeft = 0;
                     if (currentPiece.setXDirection(-1, grid)) {
                         EFFECT_READER.play("move.mp3", 1);
                         sinceLastMove = LocalTime.now();
                     }
-                    KeysStateManager.setLeftAlreadyPressed(true);
+                    KeysStateManager.setAlreadyPressed(KeyEvent.VK_LEFT, true);
                 }
             }
-            if (KeysStateManager.isRightPressed()) {
+            if (KeysStateManager.isPressed(KeyEvent.VK_RIGHT)) {
                if (lastRight != null) {
                     bufferRight += lastRight
                             .until(LocalTime.now(), ChronoUnit.MILLIS);
                 }
                 lastRight = LocalTime.now();
-                if (bufferRight > DELAY_BETWEN_MOVES ||
-                        !KeysStateManager.isRightAlreadyPressed()) {
+                if (bufferRight > DELAY_BETWEEN_MOVES ||
+                        !KeysStateManager.isAlreadyPressed(KeyEvent.VK_RIGHT)) {
                     bufferRight = 0;
                     if (currentPiece.setXDirection(1, grid)) {
                         EFFECT_READER.play("move.mp3", 1);
                         sinceLastMove = LocalTime.now();
                     }
-                    KeysStateManager.setRightAlreadyPressed(true);
+                    KeysStateManager.setAlreadyPressed(KeyEvent.VK_RIGHT, true);
                 }
             }
-            if (KeysStateManager.isSpacePressed() && 
-                    !KeysStateManager.isSpaceAlreadyPressed()) {
-                KeysStateManager.setSpaceAlreadyPressed(true);
+            if (KeysStateManager.isPressed(KeyEvent.VK_SPACE) && 
+                    !KeysStateManager.isAlreadyPressed(KeyEvent.VK_SPACE)) {
+                KeysStateManager.setAlreadyPressed(KeyEvent.VK_SPACE, true);
                 if (currentPiece.canDown(grid)) {
                     score += (currentPiece.fix() * 2);
                     sincePieceDown = LocalTime.MIN;
                     sinceLastMove = LocalTime.MIN;
                 }
             }
-            if (KeysStateManager.isCPressed()) {
-                if (!hasSwiched && !KeysStateManager.isCAlreadyPressed()) {
-                    KeysStateManager.setCAlreadyPressed(true);
+            if (KeysStateManager.isPressed(KeyEvent.VK_C)) {
+                if (!hasSwiched && !KeysStateManager.isAlreadyPressed(KeyEvent.VK_C)) {
+                    KeysStateManager.setAlreadyPressed(KeyEvent.VK_C, true);
                     if (storedPiece == null) {
                         storedPiece = currentPiece;
                         storedPiece.setPointsAsInitial();
@@ -699,16 +702,16 @@ public final class Board extends JPanel implements ActionListener {
                     EFFECT_READER.play("hold.mp3", 1);
                 }
             } 
-            if (KeysStateManager.isZPressed() && 
-                    !KeysStateManager.isZAlreadyPressed()) {
-                KeysStateManager.setZAlreadyPressed(true);
+            if (KeysStateManager.isPressed(KeyEvent.VK_Z) && 
+                    !KeysStateManager.isAlreadyPressed(KeyEvent.VK_Z)) {
+                KeysStateManager.setAlreadyPressed(KeyEvent.VK_Z, true);
                 if (currentPiece.rotateLeft(grid)) {
                     EFFECT_READER.play("rotate.mp3", 1);
                     sinceLastMove = LocalTime.now();
                 }
             }
         } else {
-            if (KeysStateManager.isRPressed()) {
+            if (KeysStateManager.isPressed(KeyEvent.VK_R)) {
                 initGame();
             }
         }

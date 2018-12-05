@@ -32,6 +32,7 @@ public class Settings {
 
     /**
      * Get the number of fraps per seconds for the animation
+     * 
      * @return Number of fraps per seconds
      */
     public int getFrapsPerSeconds() {
@@ -40,6 +41,7 @@ public class Settings {
 
     /**
      * Get number of X cases of the grid
+     * 
      * @return Number of X cases
      */
     public int getXCases() {
@@ -48,6 +50,7 @@ public class Settings {
 
     /**
      * Get number of Y cases of the grid
+     * 
      * @return Number of Y cases
      */
     public int getYCases() {
@@ -56,6 +59,7 @@ public class Settings {
 
     /**
      * Get initial musics volume
+     * 
      * @return Initial musics volume
      */
     public double getMusicsVolume() {
@@ -64,6 +68,7 @@ public class Settings {
 
     /**
      * Get initial effects volume
+     * 
      * @return Initial effects volume
      */
     public double getEffectsVolume() {

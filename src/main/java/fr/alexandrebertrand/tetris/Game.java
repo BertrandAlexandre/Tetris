@@ -52,6 +52,7 @@ public final class Game extends JFrame {
 
     /**
      * Launcher of the game
+     * 
      * @param args Main arguments
      */
     public static void main(String[] args) {
