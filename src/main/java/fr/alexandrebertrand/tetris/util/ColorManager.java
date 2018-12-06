@@ -27,14 +27,10 @@ public final class ColorManager {
     private ColorManager() {
     }
 
-    /*
-     * Method
-     */
-
     /**
-     * Initialize the color set
+     * Initialize the color manager
      */
-    public static void initialize() {
+    static {
         colorSet = new ArrayList<>();
         colorSet.add(ColorType.CYAN);
         colorSet.add(ColorType.BLUE);
