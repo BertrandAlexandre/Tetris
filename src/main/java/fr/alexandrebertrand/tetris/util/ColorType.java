@@ -1,4 +1,4 @@
-package fr.alexandrebertrand.tetris.utils;
+package fr.alexandrebertrand.tetris.util;
 
 import java.awt.Color;
 
@@ -7,7 +7,7 @@ import java.awt.Color;
  *
  * @author Alexandre Bertrand
  */
-public enum CaseColor {
+public enum ColorType {
 
     /*
      * Constants
@@ -59,7 +59,7 @@ public enum CaseColor {
      * @param color       Color of the case
      * @param borderColor Border color of the case
      */
-    CaseColor(int value, Color color, Color borderColor) {
+    ColorType(int value, Color color, Color borderColor) {
         this.value = value;
         this.color = color;
         this.borderColor = borderColor;

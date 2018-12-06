@@ -1,8 +1,8 @@
 package fr.alexandrebertrand.tetris;
 
-import fr.alexandrebertrand.tetris.models.abstracts.Piece;
-import fr.alexandrebertrand.tetris.models.*;
-import fr.alexandrebertrand.tetris.utils.*;
+import fr.alexandrebertrand.tetris.model.abstracts.*;
+import fr.alexandrebertrand.tetris.model.*;
+import fr.alexandrebertrand.tetris.util.*;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -31,6 +31,7 @@ import java.util.function.Supplier;
 import javafx.scene.media.MediaPlayer;
 
 import javax.swing.JPanel;
+import javax.swing.text.StyleConstants.ColorConstants;
 
 /**
  * Board of the game
@@ -50,9 +51,6 @@ public final class Board extends JPanel implements ActionListener {
     
     /** Dimensions of the Board */
     private final Dimension BOARD_DIM;
-    
-    /** Set of case colors */
-    private final CaseColorSet CASE_COLOR_SET;
     
     /** Minimal box size */
     private static final int BOX_SIZE = 30;
@@ -143,7 +141,6 @@ public final class Board extends JPanel implements ActionListener {
         EFFECT_READER = new SoundReader(Settings.effectsVolume, "effects/");
         keysStateManager = new KeysStateManager();
         loadSounds();
-        CASE_COLOR_SET = new CaseColorSet();
         initRotationOperations();
         initInitialPositions();
         initSuppliers();
@@ -333,13 +330,13 @@ public final class Board extends JPanel implements ActionListener {
         for (int i = 0; i < Settings.yCases; i++) {
             for (int j = 0; j < Settings.xCases; j++) {
                 if (grid.get(i).getPoints().get(j) != 0) {
-                    g.setColor(CASE_COLOR_SET.getCaseColors().get(
-                            grid.get(i).getPoints().get(j) - 1
-                    ).getBorderColor());
+                    g.setColor(ColorManager.getBorderColor(
+                        grid.get(i).getPoints().get(j)
+                    ));
                     fillBorderRect(g, new Point(j, i));
-                    g.setColor(CASE_COLOR_SET.getCaseColors().get(
-                            grid.get(i).getPoints().get(j) - 1
-                    ).getColor());
+                    g.setColor(ColorManager.getColor(
+                        grid.get(i).getPoints().get(j)
+                    ));
                     fillRect(g, new Point(j, i));
                 }
             }
@@ -348,8 +345,9 @@ public final class Board extends JPanel implements ActionListener {
         if (!gameOver) {
             // Paint gost of current piece
             for (Point p: currentPiece.getGostPoints()) {
-                g.setColor(CASE_COLOR_SET.getCaseColors().get(currentPiece
-                        .getColorValue() - 1).getColor());
+                g.setColor(ColorManager.getColor(
+                    currentPiece.getColorValue()
+                ));
                 fillBorderRect(g, p);
                 g.setColor(Color.BLACK);
                 fillRect(g, p);
@@ -357,11 +355,13 @@ public final class Board extends JPanel implements ActionListener {
 
             // Paint current piece
             for (Point p: currentPiece.getPoints()) {
-                g.setColor(CASE_COLOR_SET.getCaseColors().get(currentPiece
-                        .getColorValue() - 1).getBorderColor());
+                g.setColor(ColorManager.getBorderColor(
+                    currentPiece.getColorValue()
+                ));
                 fillBorderRect(g, p);
-                g.setColor(CASE_COLOR_SET.getCaseColors().get(currentPiece
-                        .getColorValue() - 1).getColor());
+                g.setColor(ColorManager.getColor(
+                    currentPiece.getColorValue()
+                ));
                 fillRect(g, p);
             }
         }
@@ -390,11 +390,13 @@ public final class Board extends JPanel implements ActionListener {
                     220d - (2 - storedPiece.getPieceHeight()) * (bs / 2)
             );
             for (Point p: storedPiece.getPoints()) {
-                g.setColor(CASE_COLOR_SET.getCaseColors().get(storedPiece
-                        .getColorValue() - 1).getBorderColor());
+                g.setColor(ColorManager.getBorderColor(
+                    storedPiece.getColorValue()
+                ));
                 fillBorderRect(g, p, sp);
-                g.setColor(CASE_COLOR_SET.getCaseColors().get(storedPiece
-                        .getColorValue() - 1).getColor());
+                g.setColor(ColorManager.getColor(
+                    storedPiece.getColorValue()
+                ));
                 fillRect(g, p, sp);
             }
         }
@@ -408,11 +410,13 @@ public final class Board extends JPanel implements ActionListener {
                             + i * (bs * 2 + 10) + bs * 2
             );
             for (Point p: nextPiece.get(i).getPoints()) {
-                g.setColor(CASE_COLOR_SET.getCaseColors().get(nextPiece
-                        .get(i).getColorValue() - 1).getBorderColor());
+                g.setColor(ColorManager.getBorderColor(
+                    nextPiece.get(i).getColorValue()
+                ));
                 fillBorderRect(g, p, np);
-                g.setColor(CASE_COLOR_SET.getCaseColors().get(nextPiece
-                        .get(i).getColorValue() - 1).getColor());
+                g.setColor(ColorManager.getColor(
+                    nextPiece.get(i).getColorValue()
+                ));
                 fillRect(g, p, np);
             }
         }

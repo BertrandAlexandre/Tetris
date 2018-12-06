@@ -1,6 +1,6 @@
-package fr.alexandrebertrand.tetris.models.abstracts;
+package fr.alexandrebertrand.tetris.model.abstracts;
 
-import fr.alexandrebertrand.tetris.models.Line;
+import fr.alexandrebertrand.tetris.model.Line;
 
 import java.awt.Point;
 import java.util.ArrayList;

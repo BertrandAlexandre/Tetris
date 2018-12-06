@@ -1,11 +1,11 @@
-package fr.alexandrebertrand.tetris.utils;
+package fr.alexandrebertrand.tetris.util;
 
 /**
  * Main settings of the game
  * 
  * @author Alexandre Bertrand
  */
-public class Settings {
+public final class Settings {
 
     /*
      * Attributes

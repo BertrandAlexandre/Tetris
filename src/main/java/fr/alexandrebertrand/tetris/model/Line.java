@@ -1,4 +1,4 @@
-package fr.alexandrebertrand.tetris.models;
+package fr.alexandrebertrand.tetris.model;
 
 import java.util.ArrayList;
 

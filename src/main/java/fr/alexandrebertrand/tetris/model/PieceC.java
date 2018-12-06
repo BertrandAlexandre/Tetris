@@ -1,26 +1,26 @@
-package fr.alexandrebertrand.tetris.models;
+package fr.alexandrebertrand.tetris.model;
 
-import fr.alexandrebertrand.tetris.models.abstracts.Piece;
+import fr.alexandrebertrand.tetris.model.abstracts.Piece;
 
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * G piece type
+ * C piece type
  *
  * @author Alexandre Bertrand
  */
-public class PieceG extends Piece {
+public class PieceC extends Piece {
 
     /*
      * Attributes
      */
 
-    /** Rotations of the G piece type */
+    /** Rotations of the C piece type */
     private static List<List<Point>> rotationOperations;
 
-    /** Initial position of the G piece type */
+    /** Initial position of the C piece type */
     private static List<Point> initialPoints;
 
     /*
@@ -28,14 +28,14 @@ public class PieceG extends Piece {
      */
 
     /**
-     * Main constructor of the G piece type
+     * Main constructor of the C piece type
      * 
      * @param xCases Width of the grid (number of cases on the x axe)
      * @param yCases Height of the grid (number of cases on the y axe)
      */
-    public PieceG(int xCases, int yCases) {
+    public PieceC(int xCases, int yCases) {
         super(xCases, yCases);
-        this.colorValue = 7;
+        this.colorValue = 3;
     }
 
     /*
@@ -43,37 +43,37 @@ public class PieceG extends Piece {
      */
 
     /**
-     * Initialize rotation operations of the G piece type
+     * Initialize rotation operations of the C piece type
      */
     public static void initRotationOperations() {
-        PieceG.rotationOperations = new ArrayList<>();
+        PieceC.rotationOperations = new ArrayList<>();
         final List<Point> a = new ArrayList<>();
         a.add(new Point(1, 1));
         a.add(new Point(0, 0));
-        a.add(new Point(-1, 1));
         a.add(new Point(-1, -1));
+        a.add(new Point(-2, 0));
 
         final List<Point> b = new ArrayList<>();
         b.add(new Point(1, -1));
         b.add(new Point(0, 0));
-        b.add(new Point(1, 1));
         b.add(new Point(-1, 1));
+        b.add(new Point(0, 2));
 
-        PieceG.rotationOperations.add(a);
-        PieceG.rotationOperations.add(b);
-        PieceG.rotationOperations.add(Piece.getInversedPoint(a));
-        PieceG.rotationOperations.add(Piece.getInversedPoint(b));
+        PieceC.rotationOperations.add(a);
+        PieceC.rotationOperations.add(b);
+        PieceC.rotationOperations.add(Piece.getInversedPoint(a));
+        PieceC.rotationOperations.add(Piece.getInversedPoint(b));
     }
 
     /**
-     * Initialize the initial position of the G piece type
+     * Initialize the initial position of the C piece type
      */
     public static void initInitialPosition() {
-        PieceG.initialPoints = new ArrayList<>();
-        PieceG.initialPoints.add(new Point(0, 1));
-        PieceG.initialPoints.add(new Point(1, 1));
-        PieceG.initialPoints.add(new Point(1, 0));
-        PieceG.initialPoints.add(new Point(2, 1));
+        PieceC.initialPoints = new ArrayList<>();
+        PieceC.initialPoints.add(new Point(0, 1));
+        PieceC.initialPoints.add(new Point(1, 1));
+        PieceC.initialPoints.add(new Point(2, 1));
+        PieceC.initialPoints.add(new Point(2, 0));
     }
 
     /*
@@ -81,23 +81,23 @@ public class PieceG extends Piece {
      */
 
     /**
-     * Get rotation operations of the G piece type
+     * Get rotation operations of the C piece type
      * 
      * @return Rotation operation
      */
     @Override
     protected List<List<Point>> getRotationOperations() {
-        return PieceG.rotationOperations;
+        return PieceC.rotationOperations;
     }
 
     /**
-     * Get the initial position of the G piece type
+     * Get the initial position of the C piece type
      * 
      * @return Initial position
      */
     @Override
     protected List<Point> getInitialPosition() {
-        return PieceG.initialPoints;
+        return PieceC.initialPoints;
     }
 
 }

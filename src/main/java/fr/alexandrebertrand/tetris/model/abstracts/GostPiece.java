@@ -1,10 +1,10 @@
-package fr.alexandrebertrand.tetris.models.abstracts;
+package fr.alexandrebertrand.tetris.model.abstracts;
 
 /**
  *
  * @author Alexandre Bertrand
  */
-public class GamePiece extends Piece {
+public class GostPiece extends Piece {
 
     /**
      * Default constructor
@@ -12,7 +12,7 @@ public class GamePiece extends Piece {
      * @param xCases Number of X cases
      * @param yCases Number of Y cases
      */
-    public GamePiece(int xCases, int yCases) {
+    public GostPiece(int xCases, int yCases) {
         super(xCases, yCases);
     }
 

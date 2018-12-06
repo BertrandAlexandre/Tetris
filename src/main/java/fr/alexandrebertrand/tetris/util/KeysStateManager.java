@@ -1,4 +1,4 @@
-package fr.alexandrebertrand.tetris.utils;
+package fr.alexandrebertrand.tetris.util;
 
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
