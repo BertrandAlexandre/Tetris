@@ -1,6 +1,7 @@
-package fr.alexandrebertrand.tetris.model;
+package fr.alexandrebertrand.tetris.model.piece.type;
 
-import fr.alexandrebertrand.tetris.model.abstracts.Piece;
+import fr.alexandrebertrand.tetris.model.piece.Piece;
+import fr.alexandrebertrand.tetris.util.graphic.*;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -29,23 +30,16 @@ public class PieceC extends Piece {
 
     /**
      * Main constructor of the C piece type
-     * 
-     * @param xCases Width of the grid (number of cases on the x axe)
-     * @param yCases Height of the grid (number of cases on the y axe)
      */
-    public PieceC(int xCases, int yCases) {
-        super(xCases, yCases);
-        this.colorValue = 3;
+    public PieceC() {
+        super(ColorType.ORANGE);
     }
-
-    /*
-     * Methods
-     */
-
+    
     /**
-     * Initialize rotation operations of the C piece type
+     * Initialize the C piece type
      */
-    public static void initRotationOperations() {
+    static {
+        // Initialize rotation operations of the C piece type
         PieceC.rotationOperations = new ArrayList<>();
         final List<Point> a = new ArrayList<>();
         a.add(new Point(1, 1));
@@ -63,12 +57,8 @@ public class PieceC extends Piece {
         PieceC.rotationOperations.add(b);
         PieceC.rotationOperations.add(Piece.getInversedPoint(a));
         PieceC.rotationOperations.add(Piece.getInversedPoint(b));
-    }
 
-    /**
-     * Initialize the initial position of the C piece type
-     */
-    public static void initInitialPosition() {
+        // Initialize the initial position of the C piece type
         PieceC.initialPoints = new ArrayList<>();
         PieceC.initialPoints.add(new Point(0, 1));
         PieceC.initialPoints.add(new Point(1, 1));

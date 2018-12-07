@@ -1,6 +1,7 @@
-package fr.alexandrebertrand.tetris.model;
+package fr.alexandrebertrand.tetris.model.piece.type;
 
-import fr.alexandrebertrand.tetris.model.abstracts.Piece;
+import fr.alexandrebertrand.tetris.model.piece.Piece;
+import fr.alexandrebertrand.tetris.util.graphic.*;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -26,23 +27,16 @@ public class PieceD extends Piece {
 
     /**
      * Main constructor of the D piece type
-     * 
-     * @param xCases Width of the grid (number of cases on the x axe)
-     * @param yCases Height of the grid (number of cases on the y axe)
      */
-    public PieceD(int xCases, int yCases) {
-        super(xCases, yCases);
-        this.colorValue = 4;
+    public PieceD() {
+        super(ColorType.YELLOW);
     }
-
-    /*
-     * Method
-     */
-
+    
     /**
-     * Initialize the initial position of the F piece type
+     * Initialize the F piece type
      */
-    public static void initInitialPosition() {
+    static {
+        // Initialize the initial position of the F piece type
         PieceD.initialPoints = new ArrayList<>();
         PieceD.initialPoints.add(new Point(0, 0));
         PieceD.initialPoints.add(new Point(1, 0));

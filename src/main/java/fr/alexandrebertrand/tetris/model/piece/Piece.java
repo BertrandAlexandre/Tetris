@@ -1,6 +1,8 @@
-package fr.alexandrebertrand.tetris.model.abstracts;
+package fr.alexandrebertrand.tetris.model.piece;
 
-import fr.alexandrebertrand.tetris.model.Line;
+import fr.alexandrebertrand.tetris.model.grid.Line;
+import fr.alexandrebertrand.tetris.util.graphic.*;
+import fr.alexandrebertrand.tetris.util.settings.*;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -13,16 +15,6 @@ import java.util.List;
 public class Piece {
     
     /*
-     * Constants
-     */
-
-    /** Number of X cases */
-    private final int X_CASES;
-    
-    /** Number of Y cases */
-    private final int Y_CASES;
-    
-    /*
      * Attributes
      */
     
@@ -33,13 +25,13 @@ public class Piece {
     private final List<Point> gostPoints;
     
     /** Current rotation state of the piece */
-    protected int curRotation;
+    private int curRotation;
     
     /** Space beetween piece and left edge of the board */
     private final int leftSpace;
     
-    /** Color value of the piece */
-    protected int colorValue;
+    /** Color type of the piece */
+    private ColorType colorType;
             
     /*
      * Constructors
@@ -47,17 +39,13 @@ public class Piece {
     
     /**
      * Default constructor
-     * 
-     * @param xCases Number of X cases
-     * @param yCases Number of Y cases
      */
-    public Piece(int xCases, int yCases) {
-        X_CASES = xCases;
-        Y_CASES = yCases;
+    public Piece(ColorType colorType) {
+        this.colorType = colorType;
         points = new ArrayList<>();
         gostPoints = new ArrayList<>();
         curRotation = 0;
-        leftSpace = (int) Math.floor((X_CASES - 4d) / 2);
+        leftSpace = (int) Math.floor((Settings.getXCases() - 4d) / 2);
         setPointsAsInitial();
     }
     
@@ -111,7 +99,7 @@ public class Piece {
         points.clear();
         for (Point p : this.getInitialPosition()) {
             int x = leftSpace + p.x;
-            if (grid.get(p.y).getPoints().get(x) != 0) {
+            if (grid.get(p.y).getPoints().get(x) != null) {
                 firstFailled = true;
                 break;
             } // else
@@ -121,7 +109,7 @@ public class Piece {
             points.clear();
             for (Point p : getInitialPosition()) {
                 int x = leftSpace + p.x;
-                if (p.y - 1 >= 0 && grid.get(p.y - 1).getPoints().get(x) != 0) {
+                if (p.y - 1 >= 0 && grid.get(p.y - 1).getPoints().get(x) != null) {
                     return false;
                 } // else
                 points.add(new Point(x, p.y - 1));
@@ -141,8 +129,8 @@ public class Piece {
      * @return
      */
     public boolean canDown(ArrayList<Line> grid) {
-        return points.stream().noneMatch((p) -> (p.y + 1 >= Y_CASES ||
-                grid.get(p.y + 1).getPoints().get(p.x) != 0));
+        return points.stream().noneMatch((p) -> (p.y + 1 >= Settings.getYCases() ||
+                grid.get(p.y + 1).getPoints().get(p.x) != null));
     }
     
     /**
@@ -175,8 +163,8 @@ public class Piece {
         boolean isMovable = true;
         for (Point p : points) {
             if (p.x <= 0 && xDirection <= -1 ||
-                    p.x >= X_CASES - 1 && xDirection >= 1 ||
-                    p.y >= 0 && grid.get(p.y).getPoints().get(p.x + xDirection) != 0) {
+                    p.x >= Settings.getXCases() - 1 && xDirection >= 1 ||
+                    p.y >= 0 && grid.get(p.y).getPoints().get(p.x + xDirection) != null) {
                 isMovable = false;
             }
         }
@@ -225,65 +213,35 @@ public class Piece {
     private boolean rotate(ArrayList<Line> grid, int c, int n) {
         boolean failled = false;
         int xDec = 0;
-        int yDec = 0;
         List<Point> newPoints = new ArrayList<>();
-        for (int i = 0; i < points.size(); i++) {
-            int x = points.get(i).x + getRotationOperations()
-                    .get(c).get(i).x;
-            int y = points.get(i).y + getRotationOperations()
-                    .get(c).get(i).y;
-            if (x < 0) {
-                xDec++;
-                failled = true;
-                break;
-            } else if (x >= this.X_CASES) {
-                xDec--;
-                failled = true;
-                break;
-            }
-            if (y >= this.Y_CASES ||
-                    y >= 0 && grid.get(y).getPoints().get(x) != 0) {
-                failled = true;
-                break;
-            }
-            newPoints.add(new Point(x, y));
-        }
-        if (failled) {
+        for (int i = 0; i < 3; i++) {
             failled = false;
             newPoints.clear();
-            for (int i = 0; i < points.size(); i++) {
-                int x = points.get(i).x + getRotationOperations()
-                        .get(c).get(i).x + xDec;
-                int y = points.get(i).y + getRotationOperations()
-                        .get(c).get(i).y - yDec;
+            for (int j = 0; j < points.size(); j++) {
+                int x = points.get(j).x + getRotationOperations()
+                        .get(c).get(j).x + xDec;
+                int y = points.get(j).y + getRotationOperations()
+                        .get(c).get(j).y;
                 if (x < 0) {
                     xDec++;
                     failled = true;
                     break;
-                } else if (x >= this.X_CASES) {
+                } else if (x >= Settings.getXCases()) {
                     xDec--;
                     failled = true;
                     break;
-                }
-                if (y >= this.Y_CASES ||
-                        y >= 0 && grid.get(y).getPoints().get(x) != 0) {
-                    return false;
+                } else if (y >= Settings.getYCases() ||
+                        y >= 0 && grid.get(y).getPoints().get(x) != null) {
+                    if (i > 0) {
+                        return false;
+                    }
+                    failled = true;
+                    break;
                 }
                 newPoints.add(new Point(x, y));
             }
-        }
-        if (failled) {
-            newPoints.clear();
-            for (int i = 0; i < points.size(); i++) {
-                int x = points.get(i).x + getRotationOperations()
-                        .get(c).get(i).x + xDec;
-                int y = points.get(i).y + getRotationOperations()
-                        .get(c).get(i).y - yDec;
-                if (x >= X_CASES || x < 0 ||
-                        y >= 0 && grid.get(y).getPoints().get(x) != 0) {
-                    return false;
-                }
-                newPoints.add(new Point(x, y));
+            if (!failled) {
+                break;
             }
         }
         points.clear();
@@ -308,13 +266,13 @@ public class Piece {
      * @param grid
      */
     private void setGostPointsPosition(ArrayList<Line> grid) {
-        int h = Y_CASES - getMinHeightPoint();
+        int h = Settings.getYCases() - getMinHeightPoint();
         boolean intersect = false;
         gostPoints.clear();
         for (int i = 0; i <= h; i++) {
             for (Point p : points) {
-                if (p.y + i >= Y_CASES || p.y >= 0 &&
-                        grid.get(p.y + i).getPoints().get(p.x) != 0) {
+                if (p.y + i >= Settings.getYCases() || p.y >= 0 &&
+                        grid.get(p.y + i).getPoints().get(p.x) != null) {
                     intersect = true;
                     break;
                 }
@@ -402,12 +360,12 @@ public class Piece {
     }
     
     /**
-     * Get color value of the piece
+     * Get color type of the piece
      * 
-     * @return Color value of the piece
+     * @return Color type of the piece
      */
-    public int getColorValue() {
-        return colorValue;
+    public ColorType getColorType() {
+        return this.colorType;
     }
 
 }

@@ -1,6 +1,7 @@
-package fr.alexandrebertrand.tetris.model;
+package fr.alexandrebertrand.tetris.model.piece.type;
 
-import fr.alexandrebertrand.tetris.model.abstracts.Piece;
+import fr.alexandrebertrand.tetris.model.piece.Piece;
+import fr.alexandrebertrand.tetris.util.graphic.*;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -29,23 +30,16 @@ public class PieceE extends Piece {
 
     /**
      * Main constructor of the E piece type
-     * 
-     * @param xCases Width of the grid (number of cases on the x axe)
-     * @param yCases Height of the grid (number of cases on the y axe)
      */
-    public PieceE(int xCases, int yCases) {
-        super(xCases, yCases);
-        this.colorValue = 5;
+    public PieceE() {
+        super(ColorType.RED);
     }
 
-    /*
-     * Methods
-     */
-
     /**
-     * Initialize rotation operations of the F piece type
+     * Initialize the F piece type
      */
-    public static void initRotationOperations() {
+    static {
+        // Initialize rotation operations of the F piece type
         PieceE.rotationOperations = new ArrayList<>();
         final List<Point> a = new ArrayList<>();
         a.add(new Point(0, 2));
@@ -63,12 +57,8 @@ public class PieceE extends Piece {
         PieceE.rotationOperations.add(b);
         PieceE.rotationOperations.add(Piece.getInversedPoint(a));
         PieceE.rotationOperations.add(Piece.getInversedPoint(b));
-    }
 
-    /**
-     * Initialize the initial position of the F piece type
-     */
-    public static void initInitialPosition() {
+        // Initialize the initial position of the F piece type
         PieceE.initialPoints = new ArrayList<>();
         PieceE.initialPoints.add(new Point(0, 0));
         PieceE.initialPoints.add(new Point(1, 0));

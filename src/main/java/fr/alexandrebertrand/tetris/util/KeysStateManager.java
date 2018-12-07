@@ -10,17 +10,20 @@ import java.util.HashMap;
  * 
  * @author Alexandre Bertrand
  */
-public class KeysStateManager {
+public final class KeysStateManager {
 
     /*
      * Attributes
      */
 
+    /** Unique instance of the class */
+    private static KeysStateManager instance = null;
+
     /** Pressed keys */
-    private static HashMap<Integer, Boolean> pressedKeys;
+    private HashMap<Integer, Boolean> pressedKeys;
 
     /** Already pressed keys */
-    private static HashMap<Integer, Boolean> alreadyPressedKeys;
+    private HashMap<Integer, Boolean> alreadyPressedKeys;
 
     /*
      * Constructor
@@ -50,8 +53,17 @@ public class KeysStateManager {
     }
 
     /*
-     * Getters & Setters
+     * Methods
      */
+
+    /**
+     * Implements an unique instance of the color manager
+     */
+    private static void setInstance() {
+        if (instance == null) {
+            instance = new KeysStateManager();
+        }
+    }
 
     /**
      * Indicates if the key is pressed or released
@@ -61,8 +73,9 @@ public class KeysStateManager {
      *         else false
      */
     public static boolean isPressed(int key) {
-        synchronized (KeysStateManager.class) {
-            return pressedKeys.get(key);
+        setInstance();
+        synchronized (instance) {
+            return instance.getPressedKeys().get(key);
         }
     }
 
@@ -74,8 +87,9 @@ public class KeysStateManager {
      *         else false
      */
     public static boolean isAlreadyPressed(int key) {
-        synchronized (KeysStateManager.class) {
-            return alreadyPressedKeys.get(key);
+        setInstance();
+        synchronized (instance) {
+            return instance.getAlreadyPressedKeys().get(key);
         }
     }
 
@@ -84,11 +98,43 @@ public class KeysStateManager {
      * has already been pressed
      * 
      * @param key            Key to update
-     * @param alreadyPressed Indicates if the key
-     *                       has already been pressed
+     * @param alreadyPressed Indicates if the key has already been pressed
      */
     public static void setAlreadyPressed(int key, boolean alreadyPressed) {
-        alreadyPressedKeys.replace(key, alreadyPressed);
+        setInstance();
+        instance.setAlreadyPressedKey(key, alreadyPressed);
+    }
+
+    /*
+     * Getters & Setters
+     */
+
+    /**
+     * Get pressed keys of the key state manager
+     * 
+     * @return Pressed keys of the key state manager
+     */
+    public HashMap<Integer, Boolean> getPressedKeys() {
+        return this.pressedKeys;
+    }
+
+    /**
+     * Get already pressed keys of the key state manager
+     * 
+     * @return Already pressed keys of the key state manager
+     */
+    public HashMap<Integer, Boolean> getAlreadyPressedKeys() {
+        return this.alreadyPressedKeys;
+    }
+
+    /**
+     * Set an already pressed key of the key state manager
+     * 
+     * @param key            Key to update
+     * @param alreadyPressed Indicates if the key has already been pressed
+     */
+    public void setAlreadyPressedKey(int key, boolean alreadyPressed) {
+        this.alreadyPressedKeys.put(key, alreadyPressed);
     }
 
 }

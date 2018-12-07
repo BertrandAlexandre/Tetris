@@ -14,6 +14,8 @@ import javax.swing.JFrame;
  * @author Alexandre Bertrand
  */
 public final class Game extends JFrame {
+
+    private static final long serialVersionUID = -4134577864201810993L;
     
     /*
      * Constructor

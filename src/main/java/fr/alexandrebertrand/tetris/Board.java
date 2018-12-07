@@ -1,84 +1,62 @@
 package fr.alexandrebertrand.tetris;
 
-import fr.alexandrebertrand.tetris.model.abstracts.*;
-import fr.alexandrebertrand.tetris.model.*;
+import fr.alexandrebertrand.tetris.model.grid.*;
+import fr.alexandrebertrand.tetris.model.piece.*;
+import fr.alexandrebertrand.tetris.model.piece.type.*;
+import fr.alexandrebertrand.tetris.ui.gameover.*;
+import fr.alexandrebertrand.tetris.ui.scoreboard.*;
 import fr.alexandrebertrand.tetris.util.*;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
+import fr.alexandrebertrand.tetris.util.graphic.*;
+import fr.alexandrebertrand.tetris.util.settings.*;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.FontMetrics;
+
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.font.TextAttribute;
-import java.io.IOException;
-import java.io.InputStream;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 import javafx.scene.media.MediaPlayer;
 
 import javax.swing.JPanel;
-import javax.swing.text.StyleConstants.ColorConstants;
 
 /**
  * Board of the game
+ * 
  * @author Alexandre Bertrand
  */
 public final class Board extends JPanel implements ActionListener {
 
+    private static final long serialVersionUID = 1405324003412769648L;
+
     /*
      * Constants
      */
-    
+
     /** Music reader of the game */
-    private final SoundReader MUSIC_READER;
+    private SoundReader musicsReader;
     
     /** Sound effect reader of the game */
-    private final SoundReader EFFECT_READER;
-    
-    /** Dimensions of the Board */
-    private final Dimension BOARD_DIM;
-    
-    /** Minimal box size */
-    private static final int BOX_SIZE = 30;
-    
-    /** Delay between to moves */
-    private static final long DELAY_BETWEEN_MOVES = 200;
-
-    /** key state manager */
-    private final KeysStateManager keysStateManager;
+    private SoundReader effectsReader;
     
     /*
      * Attributes
      */
     
-    /** Settings of the game */
-    private Settings settings;
-    
-    /** Main font of the game */
-    private Font font;
-    
     /** Current piece of the game */
-    private static Piece currentPiece;
+    private Piece currentPiece;
     
     /** Next piece of the game */
-    private static ArrayList<Piece> nextPiece;
+    private ArrayList<Piece> nextPieces;
     
-    /** Stored piece of the game */
-    private static Piece storedPiece;
+    /** Hold piece of the game */
+    private Piece holdPiece;
     
     /** Grid of the game */
     private ArrayList<Line> grid;
@@ -91,36 +69,53 @@ public final class Board extends JPanel implements ActionListener {
     
     /** Score of the player */
     private int score;
+
+
+
     
     /** Has swiched piece */
     private boolean hasSwiched;
     
+    /**  */
     private List<Supplier> suppliers;
     
+    /**  */
     private boolean gameOver;
     
+    /**  */
     private LocalTime lastLoopTime;
     
+    /**  */
     private long timeBufer;
     
+    /**  */
     private long fallingTime;
     
+    /**  */
     private LocalTime lastDown;
     
+    /**  */
     private LocalTime lastLeft;
     
+    /**  */
     private LocalTime lastRight;
     
+    /**  */
     private long bufferDown;
     
+    /**  */
     private long bufferLeft;
     
+    /**  */
     private long bufferRight;
     
+    /**  */
     private long fixTime;
     
+    /**  */
     private LocalTime sinceLastMove;
-    
+
+    /**  */
     private LocalTime sincePieceDown;
         
     /*
@@ -128,94 +123,62 @@ public final class Board extends JPanel implements ActionListener {
      */
     
     /**
-     * Default constructor of the snake
+     * Default constructor of the game
      * Initialise the board and the game
      */
     public Board() {
-        getSettings();
-        BOARD_DIM = new Dimension(
-                Board.BOX_SIZE * Settings.xCases,
-                Board.BOX_SIZE * Settings.yCases
-        );
-        MUSIC_READER = new SoundReader(Settings.musicsVolume, "musics/");
-        EFFECT_READER = new SoundReader(Settings.effectsVolume, "effects/");
-        keysStateManager = new KeysStateManager();
-        loadSounds();
-        initRotationOperations();
-        initInitialPositions();
+        SettingsManager.readSettings();
+        FontManager.initFont(this.getClass());
+        initWindow();
+        initSounds();
         initSuppliers();
         initGame();
-        initBoard();
-        initFont();
     }
     
     /*
      * Methods
      */
-    
+
     /**
-     * Get settings of the game
+     * Initialize the window of the game
      */
-    private void getSettings() {
-        try {
-            InputStream is = this.getClass().getClassLoader()
-                    .getResourceAsStream("resources/datas/settings.json");
-            int ch;
-            StringBuilder sb = new StringBuilder();
-            while((ch = is.read()) != -1)
-                sb.append((char)ch);
-            Gson gson = new Gson();
-            settings = new Settings();
-            settings = gson.fromJson(sb.toString(), Settings.class);
-        } catch (JsonSyntaxException | IOException e) {
-            System.err.println(e.getMessage());
-        }
+    public void initWindow() {
+        setBackground(new Color(35, 35, 35));
+        Dimension d = new Dimension(Settings.getGridDimensions());
+        d.setSize(d.getWidth() + Settings.getBoxSize() * 4 + 80, d.getHeight());
+        setPreferredSize(d);
+        setFocusable(true);
+    }
+
+    /**
+     * Load sound ressources
+     */
+    private void initSounds() {
+        musicsReader = new SoundReader(Settings.getMusicsVolume(), "musics/");
+        musicsReader.loadResource("theme.mp3");
+        musicsReader.loadResource("gameover.mp3");
+        effectsReader = new SoundReader(Settings.getEffectsVolume(), "effects/");
+        effectsReader.loadResource("drop.mp3");
+        effectsReader.loadResource("move.mp3");
+        effectsReader.loadResource("rotate.mp3");
+        effectsReader.loadResource("hold.mp3");
+        effectsReader.loadResource("level-up.mp3");
+        effectsReader.loadResource("line.mp3");
+        effectsReader.loadResource("tetris.mp3");
     }
     
     /**
      * Initialize suppliers
      */
     private void initSuppliers() {
-        final int x = Settings.xCases;
-        final int y = Settings.yCases;
         suppliers = new ArrayList<>();
-        suppliers.add(() -> new PieceA(x, y));
-        suppliers.add(() -> new PieceB(x, y));
-        suppliers.add(() -> new PieceC(x, y));
-        suppliers.add(() -> new PieceD(x, y));
-        suppliers.add(() -> new PieceE(x, y));
-        suppliers.add(() -> new PieceF(x, y));
-        suppliers.add(() -> new PieceG(x, y));
-    }
-    
-    private void initRotationOperations() {
-        PieceA.initRotationOperations();
-        PieceB.initRotationOperations();
-        PieceC.initRotationOperations();
-        PieceE.initRotationOperations();
-        PieceF.initRotationOperations();
-        PieceG.initRotationOperations();
-    }
-    
-    private void initInitialPositions() {
-        PieceA.initInitialPosition();
-        PieceB.initInitialPosition();
-        PieceC.initInitialPosition();
-        PieceD.initInitialPosition();
-        PieceE.initInitialPosition();
-        PieceF.initInitialPosition();
-        PieceG.initInitialPosition();
-    }
-    
-    /**
-     * Initialize the Board of the game
-     */
-    public void initBoard() {
-        setBackground(new Color(36, 35, 35));
-        Dimension d = new Dimension(this.BOARD_DIM);
-        d.setSize(d.getWidth() + BOX_SIZE * 4 + 80, d.getHeight());
-        setPreferredSize(d);
-        setFocusable(true);
+        suppliers.add(() -> new PieceA());
+        suppliers.add(() -> new PieceB());
+        suppliers.add(() -> new PieceC());
+        suppliers.add(() -> new PieceD());
+        suppliers.add(() -> new PieceE());
+        suppliers.add(() -> new PieceF());
+        suppliers.add(() -> new PieceG());
     }
     
     /**
@@ -238,19 +201,19 @@ public final class Board extends JPanel implements ActionListener {
         fixTime = fallingTime * 2;
         sinceLastMove = null;
         sincePieceDown = null;
-        MUSIC_READER.destroyAllPlayers();
-        MUSIC_READER.play("theme.mp3", MediaPlayer.INDEFINITE);
+        musicsReader.destroyAllPlayers();
+        musicsReader.play("theme.mp3", MediaPlayer.INDEFINITE);
         grid = new ArrayList<>();
-        for (int i = 0; i < Settings.yCases; i++) {
-            grid.add(new Line(Settings.xCases));
+        for (int i = 0; i < Settings.getYCases(); i++) {
+            grid.add(new Line());
         }
         int r = (int) (Math.random() * suppliers.size());
         currentPiece = (Piece) suppliers.get(r).get();
         currentPiece.initPosition(grid);
-        Board.nextPiece = new ArrayList<>();
+        nextPieces = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             r = (int) (Math.random() * suppliers.size());
-            nextPiece.add((Piece) suppliers.get(r).get());
+            nextPieces.add((Piece) suppliers.get(r).get());
         }
     }
     
@@ -258,253 +221,22 @@ public final class Board extends JPanel implements ActionListener {
      * Set new current piece and initialize the third next piece
      */
     private void initNextPiece() {
-        currentPiece = nextPiece.get(0);
+        currentPiece = nextPieces.get(0);
         if (!currentPiece.initPosition(grid) && gameOver == false) {
-            MUSIC_READER.destroyAllPlayers();
-            MUSIC_READER.play("gameover.mp3", 1);
+            musicsReader.destroyAllPlayers();
+            musicsReader.play("gameover.mp3", 1);
             gameOver = true;
         }
-        nextPiece.remove(0);
+        nextPieces.remove(0);
         int r = (int) (Math.random() * suppliers.size());
-        nextPiece.add((Piece) suppliers.get(r).get());
+        nextPieces.add((Piece) suppliers.get(r).get());
         sincePieceDown = null;
         sinceLastMove = null;
     }
-    
-    /**
-     * Load all ressources
-     */
-    private void loadSounds() {
-        MUSIC_READER.loadResource("theme.mp3");
-        MUSIC_READER.loadResource("gameover.mp3");
-        EFFECT_READER.loadResource("drop.mp3");
-        EFFECT_READER.loadResource("move.mp3");
-        EFFECT_READER.loadResource("rotate.mp3");
-        EFFECT_READER.loadResource("hold.mp3");
-        EFFECT_READER.loadResource("level-up.mp3");
-        EFFECT_READER.loadResource("line.mp3");
-        EFFECT_READER.loadResource("tetris.mp3");
-    }
-    
-    private void initFont() {
-        try {
-            font = Font.createFont(0, getClass().getResourceAsStream(
-                    "/resources/fonts/Tetris.ttf"));
-        } catch(FontFormatException | IOException e){
-            font = new Font ("Serif", Font.PLAIN, 15);
-        }
-    }
-    
-    /**
-     * Get main font of the game
-     * @param style Style of the text
-     * @param size Size of the text
-     * @return The font to use to write
-     */
-    public Font getFont(int style, float size) {
-        return font.deriveFont(style, size);
-    }
-    
-    /**
-     * Paint the component
-     * @param g Graphic context
-     */
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        
-        Map<TextAttribute, Object> fontAttrs = new HashMap<>();
-        fontAttrs.put(TextAttribute.TRACKING, 0.1);
-        Font curFont = getFont(Font.PLAIN, 12f).deriveFont(fontAttrs);
-        g.setFont(curFont);
-        
-        // Init grid cases
-        g.setColor(Color.BLACK);
-        for (int i = 0; i < Settings.xCases; i++) {
-            for (int j = 0; j < Settings.yCases; j++) {
-                fillBorderRect(g, new Point(i, j));
-            }
-        }
-        
-        // Paint grid lines
-        for (int i = 0; i < Settings.yCases; i++) {
-            for (int j = 0; j < Settings.xCases; j++) {
-                if (grid.get(i).getPoints().get(j) != 0) {
-                    g.setColor(ColorManager.getBorderColor(
-                        grid.get(i).getPoints().get(j)
-                    ));
-                    fillBorderRect(g, new Point(j, i));
-                    g.setColor(ColorManager.getColor(
-                        grid.get(i).getPoints().get(j)
-                    ));
-                    fillRect(g, new Point(j, i));
-                }
-            }
-        }
-        
-        if (!gameOver) {
-            // Paint gost of current piece
-            for (Point p: currentPiece.getGostPoints()) {
-                g.setColor(ColorManager.getColor(
-                    currentPiece.getColorValue()
-                ));
-                fillBorderRect(g, p);
-                g.setColor(Color.BLACK);
-                fillRect(g, p);
-            }
 
-            // Paint current piece
-            for (Point p: currentPiece.getPoints()) {
-                g.setColor(ColorManager.getBorderColor(
-                    currentPiece.getColorValue()
-                ));
-                fillBorderRect(g, p);
-                g.setColor(ColorManager.getColor(
-                    currentPiece.getColorValue()
-                ));
-                fillRect(g, p);
-            }
-        }
-        
-        int bs = Board.BOX_SIZE;
-        int rb = (int) BOARD_DIM.getWidth();
-        g.setColor(Color.BLACK);
-        g.fillRoundRect(rb + 20, 25, bs * 4 + 40, 40, 40, 40);
-        g.fillRoundRect(rb + 20, 75, bs * 4 + 40, 40, 40, 40);
-        g.fillRoundRect(rb + 20, 125, bs * 4 + 40, 40, 40, 40);
-        g.fillRoundRect(rb + 20, 210, bs * 4 + 40, bs * 2 + 20, 40, bs * 2 + 20);
-        g.fillRoundRect(rb + 20, bs * 2 + 275, bs * 4 + 40, bs * 6 + 40, 40, bs * 6 + 40);
-        g.setColor(Color.WHITE);
-        g.drawString("Level : " + level, rb + 40, 50);
-        g.drawString("Lines : " + nbLines, rb + 40, 100);
-        g.drawString("Score : " + score, rb + 40, 150);
-        g.drawString("Hold : ", rb + 40, 200);
-        g.drawString("Next : ", rb + 40, bs * 2 + 265);
-
-        if (Board.storedPiece != null) {
-            // Paint stored piece
-            Point sp = new Point();
-            sp.setLocation(
-                    Settings.xCases * bs + 40d
-                            + (4 - storedPiece.getPieceWidth()) * (bs / 2),
-                    220d - (2 - storedPiece.getPieceHeight()) * (bs / 2)
-            );
-            for (Point p: storedPiece.getPoints()) {
-                g.setColor(ColorManager.getBorderColor(
-                    storedPiece.getColorValue()
-                ));
-                fillBorderRect(g, p, sp);
-                g.setColor(ColorManager.getColor(
-                    storedPiece.getColorValue()
-                ));
-                fillRect(g, p, sp);
-            }
-        }
-        // Paint next pieces
-        for (int i = 0; i < 3; i++) {
-            Point np = new Point();
-            np.setLocation(
-                    Settings.xCases * bs + 40d
-                            + (4 - nextPiece.get(i).getPieceWidth()) * (bs / 2),
-                    285d - (2 - nextPiece.get(i).getPieceHeight()) * (bs / 2)
-                            + i * (bs * 2 + 10) + bs * 2
-            );
-            for (Point p: nextPiece.get(i).getPoints()) {
-                g.setColor(ColorManager.getBorderColor(
-                    nextPiece.get(i).getColorValue()
-                ));
-                fillBorderRect(g, p, np);
-                g.setColor(ColorManager.getColor(
-                    nextPiece.get(i).getColorValue()
-                ));
-                fillRect(g, p, np);
-            }
-        }
-        
-        if (gameOver) {
-            g.setColor(Color.WHITE);
-            g.fillRoundRect(80, 40, BOARD_DIM.width + BOX_SIZE * 4 - 80,
-                    BOARD_DIM.height - 80, 44, 44);
-            g.setColor(Color.DARK_GRAY);
-            g.fillRoundRect(84, 44, BOARD_DIM.width + BOX_SIZE * 4 - 88,
-                    BOARD_DIM.height - 88, 40, 40);
-            g.setColor(Color.WHITE);
-            curFont = getFont(Font.PLAIN, 38f).deriveFont(fontAttrs);
-            g.setFont(curFont);
-            FontMetrics curFM = getFontMetrics(curFont);
-            String t = "Game Over";
-            g.drawString(t,
-                    (getWidth() - curFM.stringWidth(t)) / 2,
-                    100);
-            g.fillRect(120, 130, getWidth() - 240, 3);
-            curFont = getFont(Font.PLAIN, 24f).deriveFont(fontAttrs);
-            g.setFont(curFont);
-            curFM = getFontMetrics(curFont);
-            t = "Score : " + this.score;
-            g.drawString(t,
-                    (getWidth() - curFM.stringWidth(t)) / 2,
-                    300);
-            curFont = getFont(Font.PLAIN, 20f).deriveFont(fontAttrs);
-            g.setFont(curFont);
-            curFM = getFontMetrics(curFont);
-            t = "Press 'R' to restart";
-            g.drawString(t,
-                    (getWidth() - curFM.stringWidth(t)) / 2,
-                    (getHeight() - 80));
-        }
-        
-    }
-    
-    /**
-     * Paint rectangle (box into the grid)
-     * @param g Graphic context
-     * @param p Position of the element
-     */
-    private void fillBorderRect(Graphics g, Point p) {
-        g.fillRect(
-                p.x * BOX_SIZE + 1, p.y * BOX_SIZE  + 1,
-                BOX_SIZE - 2, BOX_SIZE - 2
-        );
-    }
-    
-    /**
-     * Paint rectangle (box into the grid)
-     * @param g Graphic context
-     * @param p Position of the element
-     */
-    private void fillBorderRect(Graphics g, Point p, Point a) {
-        g.fillRect(
-                p.x * BOX_SIZE + 1 + a.x, p.y * BOX_SIZE  + 1 + a.y,
-                BOX_SIZE - 2, BOX_SIZE - 2
-        );
-    }
-    
-    /**
-     * Paint background rectangle
-     * @param g Graphic context
-     * @param p Position of the element
-     */
-    private void fillRect(Graphics g, Point p) {
-        g.fillRect(
-                p.x * BOX_SIZE + 2, p.y * BOX_SIZE + 2,
-                BOX_SIZE - 4, BOX_SIZE - 4
-        );
-    }
-    
-    /**
-     * Paint background rectangle
-     * @param g Graphic context
-     * @param p Position of the element
-     */
-    private void fillRect(Graphics g, Point p, Point a) {
-        g.fillRect(
-                p.x * BOX_SIZE + 2 + a.x, p.y * BOX_SIZE + 2 + a.y,
-                BOX_SIZE - 4, BOX_SIZE - 4
-        );
-    }
-    
     /**
      * Performed action
+     * 
      * @param e ActionEvent
      */
     @Override
@@ -513,7 +245,122 @@ public final class Board extends JPanel implements ActionListener {
         actions();
         repaint();
     }
-    
+
+    /**
+     * Key Listener
+     */
+    private void manageKeys() {
+        if (!gameOver) {
+            if (KeysStateManager.isPressed(KeyEvent.VK_UP) && 
+                    !KeysStateManager.isAlreadyPressed(KeyEvent.VK_UP)) {
+                KeysStateManager.setAlreadyPressed(KeyEvent.VK_UP, true);
+                if (currentPiece.rotateRight(grid)) {
+                    effectsReader.play("rotate.mp3", 1);
+                    sinceLastMove = LocalTime.now();
+                }
+            }
+            if (KeysStateManager.isPressed(KeyEvent.VK_DOWN)) {
+                if (lastDown != null) {
+                    bufferDown += lastDown
+                            .until(LocalTime.now(), ChronoUnit.MILLIS);
+                }
+                lastDown = LocalTime.now();
+                if (bufferDown > Settings.getDelayBetweenMoves() ||
+                        !KeysStateManager.isAlreadyPressed(KeyEvent.VK_DOWN)) {
+                    bufferDown = 0;
+                    if (currentPiece.canDown(grid)) {
+                        currentPiece.down();
+                        if (!KeysStateManager.isAlreadyPressed(KeyEvent.VK_DOWN)) {
+                            effectsReader.play("move.mp3", 1);
+                        }
+                        timeBufer = 0;
+                        score += 1;
+                        KeysStateManager.setAlreadyPressed(KeyEvent.VK_DOWN, true);
+                    } else if (sincePieceDown == null) {
+                        sincePieceDown = LocalTime.now();
+                        sinceLastMove = LocalTime.now();
+                    }
+                }
+            }
+            if (KeysStateManager.isPressed(KeyEvent.VK_LEFT)) {
+               if (lastLeft != null) {
+                    bufferLeft += lastLeft
+                            .until(LocalTime.now(), ChronoUnit.MILLIS);
+                }
+                lastLeft = LocalTime.now();
+                if (bufferLeft > Settings.getDelayBetweenMoves() ||
+                        !KeysStateManager.isAlreadyPressed(KeyEvent.VK_LEFT)) {
+                    bufferLeft = 0;
+                    if (currentPiece.setXDirection(-1, grid)) {
+                        effectsReader.play("move.mp3", 1);
+                        sinceLastMove = LocalTime.now();
+                    }
+                    KeysStateManager.setAlreadyPressed(KeyEvent.VK_LEFT, true);
+                }
+            }
+            if (KeysStateManager.isPressed(KeyEvent.VK_RIGHT)) {
+               if (lastRight != null) {
+                    bufferRight += lastRight
+                            .until(LocalTime.now(), ChronoUnit.MILLIS);
+                }
+                lastRight = LocalTime.now();
+                if (bufferRight > Settings.getDelayBetweenMoves() ||
+                        !KeysStateManager.isAlreadyPressed(KeyEvent.VK_RIGHT)) {
+                    bufferRight = 0;
+                    if (currentPiece.setXDirection(1, grid)) {
+                        effectsReader.play("move.mp3", 1);
+                        sinceLastMove = LocalTime.now();
+                    }
+                    KeysStateManager.setAlreadyPressed(KeyEvent.VK_RIGHT, true);
+                }
+            }
+            if (KeysStateManager.isPressed(KeyEvent.VK_SPACE) && 
+                    !KeysStateManager.isAlreadyPressed(KeyEvent.VK_SPACE)) {
+                KeysStateManager.setAlreadyPressed(KeyEvent.VK_SPACE, true);
+                if (currentPiece.canDown(grid)) {
+                    score += (currentPiece.fix() * 2);
+                    sincePieceDown = LocalTime.MIN;
+                    sinceLastMove = LocalTime.MIN;
+                }
+            }
+            if (KeysStateManager.isPressed(KeyEvent.VK_C)) {
+                if (!hasSwiched && !KeysStateManager.isAlreadyPressed(KeyEvent.VK_C)) {
+                    KeysStateManager.setAlreadyPressed(KeyEvent.VK_C, true);
+                    if (holdPiece == null) {
+                        holdPiece = currentPiece;
+                        holdPiece.setPointsAsInitial();
+                        initNextPiece();
+                    } else {
+                        Piece tempPiece = holdPiece;
+                        holdPiece = currentPiece;
+                        holdPiece.setPointsAsInitial();
+                        currentPiece = tempPiece;
+                        currentPiece.initPosition(grid);
+                        hasSwiched = true;
+                        sincePieceDown = null;
+                        sinceLastMove = null;
+                    }
+                    effectsReader.play("hold.mp3", 1);
+                }
+            } 
+            if (KeysStateManager.isPressed(KeyEvent.VK_Z) && 
+                    !KeysStateManager.isAlreadyPressed(KeyEvent.VK_Z)) {
+                KeysStateManager.setAlreadyPressed(KeyEvent.VK_Z, true);
+                if (currentPiece.rotateLeft(grid)) {
+                    effectsReader.play("rotate.mp3", 1);
+                    sinceLastMove = LocalTime.now();
+                }
+            }
+        } else {
+            if (KeysStateManager.isPressed(KeyEvent.VK_R)) {
+                initGame();
+            }
+        }
+    }
+
+    /**
+     * 
+     */
     private void actions() {
         if (gameOver) {
             
@@ -544,16 +391,16 @@ public final class Board extends JPanel implements ActionListener {
                 long b = sincePieceDown
                         .until(LocalTime.now(), ChronoUnit.MILLIS);
                 if (a >= fallingTime || b >= fixTime) {
-                    EFFECT_READER.play("drop.mp3", 1);
+                    effectsReader.play("drop.mp3", 1);
                     currentPiece.getPoints().stream().filter((p) -> (p.y >= 0))
                             .forEachOrdered((p) -> {
                         grid.get(p.y).updatePoint(
-                                p.x, currentPiece.getColorValue()
+                                p.x, currentPiece.getColorType()
                         );
                     });
                     int nbRemove = 0;
                     boolean newLevel = false;
-                    for (int j = Settings.yCases - 1; j >= 0; j--) {
+                    for (int j = Settings.getYCases() - 1; j >= 0; j--) {
                         if (grid.get(j).isClear()) {
                             grid.remove(j);
                             nbRemove++;
@@ -564,19 +411,19 @@ public final class Board extends JPanel implements ActionListener {
                         }
                     }
                     if (nbRemove == 4) {
-                        EFFECT_READER.play("tetris.mp3", 1);
+                        effectsReader.play("tetris.mp3", 1);
                     } else if (nbRemove > 0) {
-                        EFFECT_READER.play("line.mp3", 1);
+                        effectsReader.play("line.mp3", 1);
                     }
                     lineScore(nbRemove);
                     if (newLevel) {
-                        EFFECT_READER.play("level-up.mp3", 1);
+                        effectsReader.play("level-up.mp3", 1);
                         level++;
                         fallingTime = (int) (fallingTime * .8d);
                         fixTime = fallingTime * 2;
                     }
                     for (int j = 0; j < nbRemove; j++) {
-                        grid.add(0, new Line(Settings.xCases));
+                        grid.add(0, new Line());
                     }
                     initNextPiece();
                     hasSwiched = false;
@@ -585,6 +432,40 @@ public final class Board extends JPanel implements ActionListener {
         }
     }
     
+    /**
+     * Paint components
+     * 
+     * @param g Graphic context
+     */
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        
+        GridPainter.paintGrid(g);
+        GridPainter.paintLines(g, grid);
+        
+        if (!gameOver) {
+            PiecePainter.paintGostPiece(g, currentPiece);
+            PiecePainter.paintCurrentPiece(g, currentPiece);
+        }
+
+        ScoreBoardPainter.paint(g, level, nbLines, score);
+
+        if (holdPiece != null) {
+            PiecePainter.paintHoldPiece(g, holdPiece);
+        }
+        PiecePainter.paintNextPieces(g, nextPieces);
+        
+        if (gameOver) {
+            GameOverPainter.paint(g, this, score);
+        }
+    }
+    
+    /**
+     * 
+     * 
+     * @param nbLine
+     */
     private void lineScore(int nbLine) {
         switch (nbLine) {
             case 1:
@@ -599,118 +480,6 @@ public final class Board extends JPanel implements ActionListener {
             case 4:
                 score += level * 800;
                 break;
-        }
-    }
-    
-    /**
-     * Key Listener
-     */
-    private void manageKeys() {
-        if (!gameOver) {
-            if (KeysStateManager.isPressed(KeyEvent.VK_UP) && 
-                    !KeysStateManager.isAlreadyPressed(KeyEvent.VK_UP)) {
-                KeysStateManager.setAlreadyPressed(KeyEvent.VK_UP, true);
-                if (currentPiece.rotateRight(grid)) {
-                    EFFECT_READER.play("rotate.mp3", 1);
-                    sinceLastMove = LocalTime.now();
-                }
-            }
-            if (KeysStateManager.isPressed(KeyEvent.VK_DOWN)) {
-                if (lastDown != null) {
-                    bufferDown += lastDown
-                            .until(LocalTime.now(), ChronoUnit.MILLIS);
-                }
-                lastDown = LocalTime.now();
-                if (bufferDown > DELAY_BETWEEN_MOVES ||
-                        !KeysStateManager.isAlreadyPressed(KeyEvent.VK_DOWN)) {
-                    bufferDown = 0;
-                    if (currentPiece.canDown(grid)) {
-                        currentPiece.down();
-                        if (!KeysStateManager.isAlreadyPressed(KeyEvent.VK_DOWN)) {
-                            EFFECT_READER.play("move.mp3", 1);
-                        }
-                        timeBufer = 0;
-                        score += 1;
-                        KeysStateManager.setAlreadyPressed(KeyEvent.VK_DOWN, true);
-                    } else if (sincePieceDown == null) {
-                        sincePieceDown = LocalTime.now();
-                        sinceLastMove = LocalTime.now();
-                    }
-                }
-            }
-            if (KeysStateManager.isPressed(KeyEvent.VK_LEFT)) {
-               if (lastLeft != null) {
-                    bufferLeft += lastLeft
-                            .until(LocalTime.now(), ChronoUnit.MILLIS);
-                }
-                lastLeft = LocalTime.now();
-                if (bufferLeft > DELAY_BETWEEN_MOVES ||
-                        !KeysStateManager.isAlreadyPressed(KeyEvent.VK_LEFT)) {
-                    bufferLeft = 0;
-                    if (currentPiece.setXDirection(-1, grid)) {
-                        EFFECT_READER.play("move.mp3", 1);
-                        sinceLastMove = LocalTime.now();
-                    }
-                    KeysStateManager.setAlreadyPressed(KeyEvent.VK_LEFT, true);
-                }
-            }
-            if (KeysStateManager.isPressed(KeyEvent.VK_RIGHT)) {
-               if (lastRight != null) {
-                    bufferRight += lastRight
-                            .until(LocalTime.now(), ChronoUnit.MILLIS);
-                }
-                lastRight = LocalTime.now();
-                if (bufferRight > DELAY_BETWEEN_MOVES ||
-                        !KeysStateManager.isAlreadyPressed(KeyEvent.VK_RIGHT)) {
-                    bufferRight = 0;
-                    if (currentPiece.setXDirection(1, grid)) {
-                        EFFECT_READER.play("move.mp3", 1);
-                        sinceLastMove = LocalTime.now();
-                    }
-                    KeysStateManager.setAlreadyPressed(KeyEvent.VK_RIGHT, true);
-                }
-            }
-            if (KeysStateManager.isPressed(KeyEvent.VK_SPACE) && 
-                    !KeysStateManager.isAlreadyPressed(KeyEvent.VK_SPACE)) {
-                KeysStateManager.setAlreadyPressed(KeyEvent.VK_SPACE, true);
-                if (currentPiece.canDown(grid)) {
-                    score += (currentPiece.fix() * 2);
-                    sincePieceDown = LocalTime.MIN;
-                    sinceLastMove = LocalTime.MIN;
-                }
-            }
-            if (KeysStateManager.isPressed(KeyEvent.VK_C)) {
-                if (!hasSwiched && !KeysStateManager.isAlreadyPressed(KeyEvent.VK_C)) {
-                    KeysStateManager.setAlreadyPressed(KeyEvent.VK_C, true);
-                    if (storedPiece == null) {
-                        storedPiece = currentPiece;
-                        storedPiece.setPointsAsInitial();
-                        initNextPiece();
-                    } else {
-                        Piece tempPiece = storedPiece;
-                        storedPiece = currentPiece;
-                        storedPiece.setPointsAsInitial();
-                        currentPiece = tempPiece;
-                        currentPiece.initPosition(grid);
-                        hasSwiched = true;
-                        sincePieceDown = null;
-                        sinceLastMove = null;
-                    }
-                    EFFECT_READER.play("hold.mp3", 1);
-                }
-            } 
-            if (KeysStateManager.isPressed(KeyEvent.VK_Z) && 
-                    !KeysStateManager.isAlreadyPressed(KeyEvent.VK_Z)) {
-                KeysStateManager.setAlreadyPressed(KeyEvent.VK_Z, true);
-                if (currentPiece.rotateLeft(grid)) {
-                    EFFECT_READER.play("rotate.mp3", 1);
-                    sinceLastMove = LocalTime.now();
-                }
-            }
-        } else {
-            if (KeysStateManager.isPressed(KeyEvent.VK_R)) {
-                initGame();
-            }
         }
     }
     

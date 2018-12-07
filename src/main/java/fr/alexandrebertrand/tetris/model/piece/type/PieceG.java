@@ -1,6 +1,7 @@
-package fr.alexandrebertrand.tetris.model;
+package fr.alexandrebertrand.tetris.model.piece.type;
 
-import fr.alexandrebertrand.tetris.model.abstracts.Piece;
+import fr.alexandrebertrand.tetris.model.piece.Piece;
+import fr.alexandrebertrand.tetris.util.graphic.*;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -29,23 +30,16 @@ public class PieceG extends Piece {
 
     /**
      * Main constructor of the G piece type
-     * 
-     * @param xCases Width of the grid (number of cases on the x axe)
-     * @param yCases Height of the grid (number of cases on the y axe)
      */
-    public PieceG(int xCases, int yCases) {
-        super(xCases, yCases);
-        this.colorValue = 7;
+    public PieceG() {
+        super(ColorType.MAGENTA);
     }
 
-    /*
-     * Methods
-     */
-
     /**
-     * Initialize rotation operations of the G piece type
+     * Initialize the G piece type
      */
-    public static void initRotationOperations() {
+    static {
+        // Initialize rotation operations of the G piece type
         PieceG.rotationOperations = new ArrayList<>();
         final List<Point> a = new ArrayList<>();
         a.add(new Point(1, 1));
@@ -63,12 +57,8 @@ public class PieceG extends Piece {
         PieceG.rotationOperations.add(b);
         PieceG.rotationOperations.add(Piece.getInversedPoint(a));
         PieceG.rotationOperations.add(Piece.getInversedPoint(b));
-    }
 
-    /**
-     * Initialize the initial position of the G piece type
-     */
-    public static void initInitialPosition() {
+        // Initialize the initial position of the G piece type
         PieceG.initialPoints = new ArrayList<>();
         PieceG.initialPoints.add(new Point(0, 1));
         PieceG.initialPoints.add(new Point(1, 1));

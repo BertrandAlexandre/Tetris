@@ -1,4 +1,4 @@
-package fr.alexandrebertrand.tetris.util;
+package fr.alexandrebertrand.tetris.util.settings;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,6 +20,10 @@ public final class SettingsManager {
     /** Name of the game properties file */
     private final static String propertyFileName =
             "resources/app.properties";
+
+    /** Name of the private game properties file */
+    private final static String privatePropertyFileName =
+            "resources/app-private.properties";
 
     /*
      * Constructor
@@ -46,10 +50,16 @@ public final class SettingsManager {
                 p.load(ClassLoader.getSystemResourceAsStream(propertyFileName));
             }
             
-            Settings.xCases = Integer.parseInt(p.getProperty("xCases"));
-            Settings.yCases = Integer.parseInt(p.getProperty("yCases"));
-            Settings.musicsVolume = Double.parseDouble(p.getProperty("musicsVolume"));
-            Settings.effectsVolume = Double.parseDouble(p.getProperty("effectsVolume"));
+            Settings.setXCases(Integer.parseInt(p.getProperty("xCases")));
+            Settings.setYCases(Integer.parseInt(p.getProperty("yCases")));
+            Settings.setMusicsVolume(Double.parseDouble(p.getProperty("musicsVolume")));
+            Settings.setEffectsVolume(Double.parseDouble(p.getProperty("effectsVolume")));
+
+            Properties pp = new Properties();
+            pp.load(ClassLoader.getSystemResourceAsStream(privatePropertyFileName));
+
+            Settings.setBoxSize(Integer.parseInt(pp.getProperty("boxSize")));
+            Settings.setDelayBetweenMoves(Integer.parseInt(pp.getProperty("delayBetweenMoves")));
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
@@ -67,10 +77,10 @@ public final class SettingsManager {
             f.createNewFile();
             FileWriter fw = new FileWriter(f);
             fw.write(
-                "xCases=" + Settings.xCases + "\r\n" +
-                "yCases=" + Settings.yCases + "\r\n" +
-                "musicsVolume=" + Settings.musicsVolume + "\r\n" +
-                "effectsVolume=" + Settings.effectsVolume
+                "xCases=" + Settings.getXCases() + "\r\n" +
+                "yCases=" + Settings.getYCases() + "\r\n" +
+                "musicsVolume=" + Settings.getMusicsVolume() + "\r\n" +
+                "effectsVolume=" + Settings.getEffectsVolume()
             );
             fw.close();
         } catch (IOException e) {

@@ -1,6 +1,9 @@
-package fr.alexandrebertrand.tetris.model;
+package fr.alexandrebertrand.tetris.model.grid;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+
+import fr.alexandrebertrand.tetris.util.graphic.*;
+import fr.alexandrebertrand.tetris.util.settings.*;
 
 /**
  * Line of the grid
@@ -14,7 +17,7 @@ public class Line {
      */
 
     /** Points of the line */
-    private final ArrayList<Integer> points;
+    private final HashMap<Integer, ColorType> points;
 
     /*
      * Construtor
@@ -22,13 +25,11 @@ public class Line {
 
     /**
      * Default constructor
-     * 
-     * @param xCases Number of X cases
      */
-    public Line(int xCases) {
-        points = new ArrayList<>();
-        for (int i = 0; i < xCases; i++) {
-            points.add(0);
+    public Line() {
+        points = new HashMap<>();
+        for (int i = 0; i < Settings.getXCases(); i++) {
+            points.put(i, null);
         }
     }
 
@@ -42,7 +43,7 @@ public class Line {
      * @return true if the line is clear
      */
     public boolean isClear() {
-        return points.stream().noneMatch((p) -> (p == 0));
+        return !points.containsValue(null);
     }
 
     /**
@@ -51,8 +52,8 @@ public class Line {
      * @param x Index of the point
      * @param v Value if the point
      */
-    public void updatePoint(int x, int v) {
-        points.set(x, v);
+    public void updatePoint(int x, ColorType colorType) {
+        points.put(x, colorType);
     }
 
     /*
@@ -64,7 +65,7 @@ public class Line {
      * 
      * @return Points of the line
      */
-    public ArrayList<Integer> getPoints() {
+    public HashMap<Integer, ColorType> getPoints() {
         return points;
     }
 
