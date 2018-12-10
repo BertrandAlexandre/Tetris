@@ -40,12 +40,14 @@ public final class ScoreBoardPainter {
         
         int bs = Settings.getBoxSize();
         int rb = (int) Settings.getGridDimensions().getWidth();
+        
         g.setColor(Color.BLACK);
         g.fillRoundRect(rb + 20, 25, bs * 4 + 40, 40, 40, 40);
         g.fillRoundRect(rb + 20, 75, bs * 4 + 40, 40, 40, 40);
         g.fillRoundRect(rb + 20, 125, bs * 4 + 40, 40, 40, 40);
         g.fillRoundRect(rb + 20, 210, bs * 4 + 40, bs * 2 + 20, 40, bs * 2 + 20);
         g.fillRoundRect(rb + 20, bs * 2 + 275, bs * 4 + 40, bs * 6 + 40, 40, bs * 6 + 40);
+
         g.setColor(Color.WHITE);
         g.drawString("Level : " + level, rb + 40, 50);
         g.drawString("Lines : " + nbLines, rb + 40, 100);

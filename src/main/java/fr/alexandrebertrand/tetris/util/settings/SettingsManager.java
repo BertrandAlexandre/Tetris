@@ -4,7 +4,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.Properties;
+import java.util.Scanner;
+
+import fr.alexandrebertrand.tetris.Game;
 
 /**
  * Settings manager to read and update settings
@@ -17,13 +23,13 @@ public final class SettingsManager {
      * Attributes
      */
 
-    /** Name of the game properties file */
+    /** Name of the game properties file path */
     private final static String propertyFileName =
-            "resources/app.properties";
+            "/app.properties";
 
-    /** Name of the private game properties file */
+    /** Name of the private game properties file path */
     private final static String privatePropertyFileName =
-            "resources/app-private.properties";
+            "/resources/app-private.properties";
 
     /*
      * Constructor
@@ -41,7 +47,6 @@ public final class SettingsManager {
     public static void readSettings() {
         try {
             Properties p = new Properties();
-            
             FileInputStream fis = new FileInputStream(propertyFileName);
             if (fis.available() > 0) {
                 p.load(fis);
@@ -49,7 +54,7 @@ public final class SettingsManager {
             } else {
                 p.load(ClassLoader.getSystemResourceAsStream(propertyFileName));
             }
-            
+
             Settings.setXCases(Integer.parseInt(p.getProperty("xCases")));
             Settings.setYCases(Integer.parseInt(p.getProperty("yCases")));
             Settings.setMusicsVolume(Double.parseDouble(p.getProperty("musicsVolume")));
