@@ -4,13 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Enumeration;
 import java.util.Properties;
-import java.util.Scanner;
-
-import fr.alexandrebertrand.tetris.Game;
 
 /**
  * Settings manager to read and update settings
@@ -23,9 +17,13 @@ public final class SettingsManager {
      * Attributes
      */
 
+    /** Name of the user game properties file path */
+    private final static String userPropertyFileName =
+            "./app.properties";
+
     /** Name of the game properties file path */
     private final static String propertyFileName =
-            "/app.properties";
+            "/resources/app.properties";
 
     /** Name of the private game properties file path */
     private final static String privatePropertyFileName =
@@ -47,12 +45,13 @@ public final class SettingsManager {
     public static void readSettings() {
         try {
             Properties p = new Properties();
-            FileInputStream fis = new FileInputStream(propertyFileName);
-            if (fis.available() > 0) {
+
+            try {
+                FileInputStream fis = new FileInputStream(userPropertyFileName);
                 p.load(fis);
                 fis.close();
-            } else {
-                p.load(ClassLoader.getSystemResourceAsStream(propertyFileName));
+            } catch (Exception e) {
+                p.load(SettingsManager.class.getResourceAsStream(propertyFileName));
             }
 
             Settings.setXCases(Integer.parseInt(p.getProperty("xCases")));
@@ -61,7 +60,7 @@ public final class SettingsManager {
             Settings.setEffectsVolume(Double.parseDouble(p.getProperty("effectsVolume")));
 
             Properties pp = new Properties();
-            pp.load(ClassLoader.getSystemResourceAsStream(privatePropertyFileName));
+            pp.load(SettingsManager.class.getResourceAsStream(privatePropertyFileName));
 
             Settings.setBoxSize(Integer.parseInt(pp.getProperty("boxSize")));
             Settings.setDelayBetweenMoves(Integer.parseInt(pp.getProperty("delayBetweenMoves")));
