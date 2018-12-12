@@ -58,6 +58,7 @@ public final class SettingsManager {
             Settings.setYCases(Integer.parseInt(p.getProperty("yCases")));
             Settings.setMusicsVolume(Double.parseDouble(p.getProperty("musicsVolume")));
             Settings.setEffectsVolume(Double.parseDouble(p.getProperty("effectsVolume")));
+            Settings.setFrapsPerSecond(Integer.parseInt(p.getProperty("frapsPerSecond")));
 
             Properties pp = new Properties();
             pp.load(SettingsManager.class.getResourceAsStream(privatePropertyFileName));

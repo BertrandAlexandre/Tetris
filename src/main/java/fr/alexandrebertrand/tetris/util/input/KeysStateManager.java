@@ -114,6 +114,9 @@ public final class KeysStateManager {
      */
     public boolean isPressed(int key) {
         synchronized (KeysStateManager.class) {
+        	if (pressedKeys.get(key) == null) {
+        		pressedKeys.put(key, false);
+        	}
             return pressedKeys.get(key);
         }
     }
@@ -127,6 +130,9 @@ public final class KeysStateManager {
      */
     public boolean isAlreadyPressed(int key) {
         synchronized (KeysStateManager.class) {
+        	if (alreadyPressedKeys.get(key) == null) {
+        		alreadyPressedKeys.put(key, false);
+        	}
             return alreadyPressedKeys.get(key);
         }
     }

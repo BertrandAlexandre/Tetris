@@ -26,6 +26,7 @@ import java.util.function.Supplier;
 import javafx.scene.media.MediaPlayer;
 
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 /**
  * Board of the game
@@ -34,11 +35,12 @@ import javax.swing.JPanel;
  */
 public final class Board extends JPanel implements ActionListener {
 
-    private static final long serialVersionUID = 1405324003412769648L;
-
     /*
      * Constants
      */
+	
+    /** Main timer of the game */
+    private Timer timer;
 
     /** Music reader of the game */
     private SoundReader musicsReader;
@@ -115,11 +117,11 @@ public final class Board extends JPanel implements ActionListener {
      * Initialise the board and the game
      */
     public Board() {
+    	SettingsManager.readSettings();
         this.keyStateManager = KeysStateManager.getInstance();
         addMouseListener(MouseInputListener.getInstance());
-        SettingsManager.readSettings();
         FontManager.initFont(this.getClass());
-        initWindow();
+        initApp();
         initSounds();
         initSuppliers();
         initGame();
@@ -132,7 +134,10 @@ public final class Board extends JPanel implements ActionListener {
     /**
      * Initialize the window of the game
      */
-    public void initWindow() {
+    public void initApp() {
+    	int ms = (int) Math.round(1000d / Settings.getFrapsPerSecond());
+    	timer = new Timer(ms, this);
+    	timer.start();
         setBackground(new Color(35, 35, 35));
         Dimension d = new Dimension(Settings.getGridDimensions());
         d.setSize(d.getWidth() + Settings.getBoxSize() * 4 + 80, d.getHeight());
@@ -226,9 +231,13 @@ public final class Board extends JPanel implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
+    	System.err.println("DEBUG #1");
         manageKeys();
+        System.err.println("DEBUG #2");
         actions();
+        System.err.println("DEBUG #3");
         repaint();
+        System.err.println("DEBUG #4");
     }
 
     /**

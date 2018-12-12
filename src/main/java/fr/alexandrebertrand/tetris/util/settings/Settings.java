@@ -24,6 +24,9 @@ public final class Settings {
 
     /** Initial effects volume */
     private static double effectsVolume;
+    
+    /** Preferized number of fraps per second */
+    private static int frapsPerSecond;
 
     /** Size of a box on the grid */
     private static int boxSize;
@@ -131,6 +134,24 @@ public final class Settings {
      */
     public static void setEffectsVolume(double effectsVolume) {
         Settings.effectsVolume = effectsVolume;
+    }
+    
+    /**
+     * Get preferized number of fraps per second
+     * 
+     * @return Preferized number of fraps per second
+     */
+    public static double getFrapsPerSecond() {
+        return Settings.frapsPerSecond;
+    }
+
+    /**
+     * Set preferized number of fraps per second
+     * 
+     * @param frapsPerSecond New preferized number of fraps per second
+     */
+    public static void setFrapsPerSecond(int frapsPerSecond) {
+        Settings.frapsPerSecond = frapsPerSecond;
     }
 
     /**
