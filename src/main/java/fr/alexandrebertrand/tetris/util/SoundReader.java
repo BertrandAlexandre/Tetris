@@ -1,4 +1,4 @@
-package fr.alexandrebertrand.tetris.utils;
+package fr.alexandrebertrand.tetris.util;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -28,29 +28,30 @@ public final class SoundReader {
      * Attributes
      */
 
-    /** Sound volume of the reader */
-    private final double volume;
-
-    /** Path of the sound ressources directory */
+    /** Path of the sound resources directory */
     private final String path;
 
     /** Medias collection */
-    private final HashMap<String, Media> medias;
+    private HashMap<String, Media> medias;
 
     /* List of players */
-    private final List<MediaPlayer> players;
+    private List<MediaPlayer> players;
+
+    /** Sound volume of the reader */
+    private double volume;
 
     /** Number of media players currently playing */
     private int nbPlayers;
 
     /*
-     * Constructor
+     * Constructors
      */
 
     /**
-     * Default constructor to initialise medias and players
+     * Default constructor to initialize medias and players
+     * 
      * @param volume Volume of sounds
-     * @param prefix Prefix of the sound ressources directory
+     * @param prefix Prefix of the sound resources directory
      */
     public SoundReader(double volume, String prefix) {
         this.volume = volume;
@@ -65,7 +66,26 @@ public final class SoundReader {
      */
 
     /**
+     * Load a sound resource
+     * 
+     * @param fileName File name of the sound
+     */
+    public void loadResource(String fileName) {
+        try {
+            Media med = new Media(
+                    getClass().getResource(path + fileName)
+                            .toURI().toString()
+            );
+            medias.put(fileName, med);
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(SoundReader.class.getName())
+                    .log(Level.SEVERE, ex.getMessage(), ex);
+        }
+    }
+
+    /**
      * Read a sound with loop
+     * 
      * @param fileName Filename of the sound
      * @param nbLoop   Number of loop to play sound
      */
@@ -89,28 +109,41 @@ public final class SoundReader {
     }
 
     /**
-     * Load a sound resource
-     * @param fileName File name of the sound
+     * Initialize volume of sound players with
+     * volume of the sound reader
      */
-    public void loadResource(String fileName) {
-        try {
-            Media med = new Media(
-                    getClass().getResource(path + fileName)
-                            .toURI().toString()
-            );
-            medias.put(fileName, med);
-        } catch (URISyntaxException ex) {
-            Logger.getLogger(SoundReader.class.getName())
-                    .log(Level.SEVERE, ex.getMessage(), ex);
-        }
+    public void initializePlayersVolume() {
+        players.forEach(p -> p.setVolume(volume));
+    }
+
+    /**
+     * Update volume of sound players
+     * 
+     * @param volume New volume of sound players
+     */
+    public void setPlayersVolume(double volume) {
+        players.forEach(p -> p.setVolume(volume));
     }
 
     /**
      * Destroy all current sound players
      */
     public void destroyAllPlayers() {
-        players.forEach((p) -> p.dispose());
+        players.forEach(p -> p.dispose());
         players.clear();
+    }
+
+    /*
+     * Getters & Setters
+     */
+
+    /**
+     * Set the volume of the sound reader
+     * 
+     * @param volume New volume of the sound reader
+     */
+    public void setVolume(double volume) {
+        this.volume = volume;
     }
 
 }

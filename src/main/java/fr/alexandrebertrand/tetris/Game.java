@@ -14,9 +14,16 @@ import javax.swing.JFrame;
  * @author Alexandre Bertrand
  */
 public final class Game extends JFrame {
+	
+	/*
+	 * Constants
+	 */
+
+	/** Unique serial version identifier */
+    private static final long serialVersionUID = -4134577864201810993L;
     
     /*
-     * Constructor
+     * Constructors
      */
 
     /**
@@ -37,7 +44,6 @@ public final class Game extends JFrame {
         final JFXPanel fxPanel = new JFXPanel();
         add(new Board());
         
-        // setUndecorated(true);
         ImageIcon icon = new ImageIcon(getClass().getResource("/resources/icons/tetris.png"));
         Image image = icon.getImage();
         setIconImage(image);
@@ -52,15 +58,13 @@ public final class Game extends JFrame {
 
     /**
      * Launcher of the game
+     * 
      * @param args Main arguments
      */
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                JFrame ex = new Game();
-                ex.setVisible(true);
-            }
+        EventQueue.invokeLater(() -> {
+            JFrame ex = new Game();
+            ex.setVisible(true);
         });
     }
 

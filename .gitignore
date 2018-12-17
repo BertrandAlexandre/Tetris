@@ -1,4 +1,5 @@
 target/
+bin/
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
@@ -10,3 +11,8 @@ buildNumber.properties
 
 # Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
 !/.mvn/wrapper/maven-wrapper.jar
+
+# Visual studio code
+.classpath
+.project
+.settings/

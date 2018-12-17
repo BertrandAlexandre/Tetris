@@ -1,6 +1,7 @@
-package fr.alexandrebertrand.tetris.models;
+package fr.alexandrebertrand.tetris.model.piece.type;
 
-import fr.alexandrebertrand.tetris.models.abstracts.Piece;
+import fr.alexandrebertrand.tetris.model.piece.Piece;
+import fr.alexandrebertrand.tetris.util.graphic.*;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -24,27 +25,21 @@ public class PieceB extends Piece {
     private static List<Point> initialPoints;
 
     /*
-     * Constructor
+     * Constructors
      */
 
     /**
      * Main constructor of the B piece type
-     * @param xCases Width of the grid (number of cases on the x axe)
-     * @param yCases Height of the grid (number of cases on the y axe)
      */
-    public PieceB(int xCases, int yCases) {
-        super(xCases, yCases);
-        this.colorValue = 2;
+    public PieceB() {
+        super(ColorType.BLUE);
     }
 
-    /*
-     * Methods
-     */
-
     /**
-     * Initialize rotation operations of the B piece type
+     * Initialize the B piece type
      */
-    public static void initRotationOperations() {
+    static {
+        // Initialize rotation operations of the B piece type
         PieceB.rotationOperations = new ArrayList<>();
         final List<Point> a = new ArrayList<>();
         a.add(new Point(0, 2));
@@ -62,12 +57,8 @@ public class PieceB extends Piece {
         PieceB.rotationOperations.add(b);
         PieceB.rotationOperations.add(Piece.getInversedPoint(a));
         PieceB.rotationOperations.add(Piece.getInversedPoint(b));
-    }
 
-    /**
-     * Initialize the initial position of the B piece type
-     */
-    public static void initInitialPosition() {
+        // Initialize the initial position of the B piece type
         PieceB.initialPoints = new ArrayList<>();
         PieceB.initialPoints.add(new Point(0, 0));
         PieceB.initialPoints.add(new Point(0, 1));
@@ -76,11 +67,12 @@ public class PieceB extends Piece {
     }
 
     /*
-     * Getters
+     * Getters & Setters
      */
 
     /**
      * Get rotation operations of the B piece type
+     * 
      * @return Rotation operation
      */
     @Override
@@ -90,6 +82,7 @@ public class PieceB extends Piece {
 
     /**
      * Get the initial position of the B piece type
+     * 
      * @return Initial position
      */
     @Override

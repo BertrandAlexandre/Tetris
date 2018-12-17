@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://github.com/BertrandAlexandre/Tetris/blob/master/src/main/resources/dist/tetris-logo.png" alt="Tetris logo" width=105 height=72>
+    <img src="https://github.com/BertrandAlexandre/Tetris/blob/master/src/main/resources/dist/tetris-logo.png" alt="Tetris logo" width=210 height=144>
 
   <h3 align="center">Tetris</h3>
 
