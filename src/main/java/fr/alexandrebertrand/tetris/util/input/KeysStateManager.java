@@ -36,7 +36,7 @@ public final class KeysStateManager {
     private HashMap<Integer, Long> keyUseBuffer;
 
     /*
-     * Constructor
+     * Constructors
      */
 
     /**
@@ -87,28 +87,11 @@ public final class KeysStateManager {
         lastUsedKeys.clear();
         keyUseBuffer.clear();
     }
-    
-    /*
-    public void init() {
-        initHashMap(pressedKeys, false);
-        initHashMap(alreadyPressedKeys, false);
-        initHashMap(lastUsedKeys, null);
-        initHashMap(keyUseBuffer, 0l);
-    }
-
-    private <T extends Object & Comparable<? super T>> void initHashMap(HashMap<Integer, T> map, T val) {
-        Iterator it = map.entrySet().iterator();
-        while (it.hasNext()) {
-            HashMap.Entry pair = (HashMap.Entry) it.next();
-            map.put((int) pair.getKey(), val);
-        }
-    }
-    */
 
     /**
      * Indicates if the key is pressed or released
      * 
-     * @param  key Key to analyse
+     * @param  key Key to analyze
      * @return true if key is pressed,
      *         else false
      */
@@ -124,7 +107,7 @@ public final class KeysStateManager {
     /**
      * Indicates if the key has already been pressed or not
      * 
-     * @param  key Key to analyse
+     * @param  key Key to analyze
      * @return true if key has already been pressed,
      *         else false
      */
@@ -164,7 +147,7 @@ public final class KeysStateManager {
     /**
      * Check if key can be used by the player
      * 
-     * @param key Key to update and analyse
+     * @param key Key to update and analyze
      * @return true if key can be used,
      *         else false
      */

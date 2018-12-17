@@ -10,7 +10,7 @@ import java.awt.Graphics;
 public final class OptionsMenuPainter {
 
     /*
-     * Constructor
+     * Constructors
      */
 
     /**
@@ -20,11 +20,10 @@ public final class OptionsMenuPainter {
     }
 
     /*
-     * Method
+     * Methods
      */
 
     public static void paint(Graphics g) {
-
     }
 
 }

@@ -13,14 +13,14 @@ import fr.alexandrebertrand.tetris.util.settings.*;
 public class Line {
 
     /*
-     * Attribute
+     * Attributes
      */
 
     /** Points of the line */
     private final HashMap<Integer, ColorType> points;
 
     /*
-     * Construtor
+     * Constructors
      */
 
     /**
@@ -57,7 +57,7 @@ public class Line {
     }
 
     /*
-     * Getter
+     * Getters & Setters
      */
 
     /**

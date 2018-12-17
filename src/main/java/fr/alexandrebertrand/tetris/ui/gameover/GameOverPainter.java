@@ -16,7 +16,7 @@ import fr.alexandrebertrand.tetris.util.settings.Settings;
 public final class GameOverPainter {
 
     /*
-     * Constructor
+     * Constructors
      */
 
     /**
@@ -26,7 +26,7 @@ public final class GameOverPainter {
     }
 
     /*
-     * Method
+     * Methods
      */
 
     /**

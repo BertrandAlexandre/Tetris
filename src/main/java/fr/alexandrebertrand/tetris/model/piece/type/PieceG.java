@@ -25,7 +25,7 @@ public class PieceG extends Piece {
     private static List<Point> initialPoints;
 
     /*
-     * Constructor
+     * Constructors
      */
 
     /**
@@ -67,7 +67,7 @@ public class PieceG extends Piece {
     }
 
     /*
-     * Getters
+     * Getters & Setters
      */
 
     /**

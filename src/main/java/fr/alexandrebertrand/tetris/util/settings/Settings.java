@@ -25,17 +25,17 @@ public final class Settings {
     /** Initial effects volume */
     private static double effectsVolume;
     
-    /** Preferized number of fraps per second */
-    private static int frapsPerSecond;
+    /** Preferred number of frames per second */
+    private static int framesPerSecond;
 
     /** Size of a box on the grid */
     private static int boxSize;
 
-    /** Dellay beetween too moves */
+    /** Delay between too moves */
     private static int delayBetweenMoves;
 
     /*
-     * Constructor
+     * Constructors
      */
 
     /**
@@ -137,21 +137,21 @@ public final class Settings {
     }
     
     /**
-     * Get preferized number of fraps per second
+     * Get preferred number of frames per second
      * 
-     * @return Preferized number of fraps per second
+     * @return Preferred number of frames per second
      */
-    public static double getFrapsPerSecond() {
-        return Settings.frapsPerSecond;
+    public static double getFramesPerSecond() {
+        return Settings.framesPerSecond;
     }
 
     /**
-     * Set preferized number of fraps per second
+     * Set preferred number of frames per second
      * 
-     * @param frapsPerSecond New preferized number of fraps per second
+     * @param framesPerSecond New preferred number of frames per second
      */
-    public static void setFrapsPerSecond(int frapsPerSecond) {
-        Settings.frapsPerSecond = frapsPerSecond;
+    public static void setFramesPerSecond(int framesPerSecond) {
+        Settings.framesPerSecond = framesPerSecond;
     }
 
     /**

@@ -25,9 +25,21 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>1.2.1</version>
+        <version>1.6.0</version>
         <configuration>
           <mainClass>fr.alexandrebertrand.tetris.Game</mainClass>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.1.0</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>fr.alexandrebertrand.tetris.Game</mainClass>
+            </manifest>
+          </archive>
         </configuration>
       </plugin>
     </plugins>
@@ -39,7 +51,7 @@
         </excludes>
       </resource>
     </resources>
-	<finalName>${project.artifactId}</finalName>
+    <finalName>${project.artifactId}</finalName>
   </build>
 
 </project>

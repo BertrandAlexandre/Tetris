@@ -13,7 +13,7 @@ public enum ColorType {
      * Constants
      */
 
-    /** Cyan coor */
+    /** Cyan color */
     CYAN(new Color(43, 172, 226), new Color(0, 112, 202)),
 
     /** Blue color */
@@ -45,7 +45,7 @@ public enum ColorType {
     private final Color borderColor;
 
     /*
-     * Constructor
+     * Constructors
      */
 
     /**
@@ -61,7 +61,7 @@ public enum ColorType {
     }
 
     /*
-     * Getters
+     * Getters & Setters
      */
 
     /**

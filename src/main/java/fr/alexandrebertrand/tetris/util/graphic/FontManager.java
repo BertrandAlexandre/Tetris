@@ -14,17 +14,18 @@ import java.util.HashMap;
 public final class FontManager {
 
     /*
-     * Constant
+     * Constants
      */
 
     /** Path of the main font of the game */
     private static final String PATH =
             "/resources/fonts/Tetris.ttf";
 
+    /** Spacing between characters */
     private static final double SPACING = 0.1d;
 
     /*
-     * Attribute
+     * Attributes
      */
 
     /** Main font of the game */
@@ -34,7 +35,7 @@ public final class FontManager {
     private static HashMap<TextAttribute, Object> fontAttributes;
 
     /*
-     * Constructor
+     * Constructors
      */
 
     /**
@@ -52,11 +53,11 @@ public final class FontManager {
      * 
      * @param board Board class
      */
-    public static void initFont(Class board) {
+    public static void initFont(@SuppressWarnings("rawtypes") Class main) {
         try {
             fontAttributes = new HashMap<>();
             fontAttributes.put(TextAttribute.TRACKING, SPACING);
-            font = Font.createFont(0, board.getResourceAsStream(PATH));
+            font = Font.createFont(0, main.getResourceAsStream(PATH));
         } catch(FontFormatException | IOException e){
             font = new Font ("Serif", Font.PLAIN, 15);
         }

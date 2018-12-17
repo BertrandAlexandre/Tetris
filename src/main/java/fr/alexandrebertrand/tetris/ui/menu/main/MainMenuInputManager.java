@@ -30,7 +30,7 @@ public final class MainMenuInputManager {
     public static final int NOTHING = 0;
 
     /*
-     * Constructor
+     * Constructors
      */
 
     /**

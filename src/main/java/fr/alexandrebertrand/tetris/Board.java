@@ -39,7 +39,14 @@ public final class Board extends JPanel implements ActionListener {
      * Constants
      */
 	
-    /** Main timer of the game */
+	/** Unique serial version identifier */
+	private static final long serialVersionUID = -873119713546307387L;
+	
+    /*
+     * Attributes
+     */
+
+	/** Main timer of the game */
     private Timer timer;
 
     /** Music reader of the game */
@@ -50,10 +57,6 @@ public final class Board extends JPanel implements ActionListener {
 
     /** Key state manager of the game */
     private KeysStateManager keyStateManager;
-    
-    /*
-     * Attributes
-     */
     
     /** Current piece of the game */
     private Piece currentPiece;
@@ -67,7 +70,7 @@ public final class Board extends JPanel implements ActionListener {
     /** Grid of the game */
     private ArrayList<Line> grid;
     
-    /** Number of lines compleate */
+    /** Number of completed lines */
     private int nbLines;
     
     /** Current level */
@@ -76,36 +79,32 @@ public final class Board extends JPanel implements ActionListener {
     /** Score of the player */
     private int score;
 
-
-
-    
-    /** Has swiched piece */
+    /** Has switched piece */
     private boolean hasSwiched;
     
-    /**  */
-    private List<Supplier> suppliers;
+    /** List of suppliers containing pieces types */
+    @SuppressWarnings("rawtypes")
+	private List<Supplier> suppliers;
     
-    /**  */
+    /** Game over status */
     private boolean gameOver;
 
-    
-    /**  */
+    /** Time between now and the last loop */
     private LocalTime lastLoopTime;
     
-    /**  */
+    /** Time loop buffer */
     private long timeBufer;
 
-    
-    /**  */
+    /** Falling piece time buffer */
     private long fallingTime;
     
-    /**  */
+    /** Fixed piece time buffer */
     private long fixTime;
     
-    /**  */
+    /** Time between now and last move */
     private LocalTime sinceLastMove;
 
-    /**  */
+    /** Time between now and last down of piece */
     private LocalTime sincePieceDown;
         
     /*
@@ -113,8 +112,7 @@ public final class Board extends JPanel implements ActionListener {
      */
     
     /**
-     * Default constructor of the game
-     * Initialise the board and the game
+     * Initialize the board and the game
      */
     public Board() {
     	SettingsManager.readSettings();
@@ -135,7 +133,7 @@ public final class Board extends JPanel implements ActionListener {
      * Initialize the window of the game
      */
     public void initApp() {
-    	int ms = (int) Math.round(1000d / Settings.getFrapsPerSecond());
+    	int ms = (int) Math.round(1000d / Settings.getFramesPerSecond());
     	timer = new Timer(ms, this);
     	timer.start();
         setBackground(new Color(35, 35, 35));
@@ -146,7 +144,7 @@ public final class Board extends JPanel implements ActionListener {
     }
 
     /**
-     * Load sound ressources
+     * Load sound resources
      */
     private void initSounds() {
         musicsReader = new SoundReader(Settings.getMusicsVolume(), "musics/");
@@ -231,17 +229,13 @@ public final class Board extends JPanel implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-    	System.err.println("DEBUG #1");
         manageKeys();
-        System.err.println("DEBUG #2");
-        actions();
-        System.err.println("DEBUG #3");
+        manageLoop();
         repaint();
-        System.err.println("DEBUG #4");
     }
 
     /**
-     * Key Listener
+     * Manage key inputs and related actions
      */
     private void manageKeys() {
         if (!gameOver) {
@@ -335,12 +329,10 @@ public final class Board extends JPanel implements ActionListener {
     }
 
     /**
-     * 
+     * Manage current loop operations
      */
-    private void actions() {
-        if (gameOver) {
-            
-        } else {
+    private void manageLoop() {
+        if (!gameOver) {
             if (lastLoopTime != null) {
                 timeBufer += lastLoopTime
                         .until(LocalTime.now(), ChronoUnit.MILLIS);
@@ -421,7 +413,7 @@ public final class Board extends JPanel implements ActionListener {
         GridPainter.paintLines(g, grid);
         
         if (!gameOver) {
-            PiecePainter.paintGostPiece(g, currentPiece);
+            PiecePainter.paintGhostPiece(g, currentPiece);
             PiecePainter.paintCurrentPiece(g, currentPiece);
         }
 
@@ -438,9 +430,9 @@ public final class Board extends JPanel implements ActionListener {
     }
     
     /**
+     * Get score addition with number of line cleared and current level
      * 
-     * 
-     * @param nbLine
+     * @param nbLine Number of line cleared
      */
     private void lineScore(int nbLine) {
         switch (nbLine) {

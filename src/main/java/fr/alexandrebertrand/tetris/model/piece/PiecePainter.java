@@ -16,7 +16,7 @@ import fr.alexandrebertrand.tetris.util.settings.*;
 public final class PiecePainter {
 
     /*
-     * Constructor
+     * Constructors
      */
 
     /**
@@ -45,13 +45,13 @@ public final class PiecePainter {
     }
 
     /**
-     * Paint gost piece of current piece
+     * Paint ghost piece of current piece
      * 
      * @param g     Graphic context
-     * @param piece Gost piece
+     * @param piece Ghost piece
      */
-    public static void paintGostPiece(Graphics g, Piece piece) {
-        for (Point p: piece.getGostPoints()) {
+    public static void paintGhostPiece(Graphics g, Piece piece) {
+        for (Point p: piece.getGhostPoints()) {
             g.setColor(piece.getColorType().getColor());
             PaintManager.fillBorderRect(g, p);
             g.setColor(Color.BLACK);

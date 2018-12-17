@@ -21,13 +21,13 @@ public class Piece {
     /** Position of the piece */
     private final List<Point> points;
     
-    /** Position of the gost */
-    private final List<Point> gostPoints;
+    /** Position of the ghost */
+    private final List<Point> ghostPoints;
     
     /** Current rotation state of the piece */
     private int curRotation;
     
-    /** Space beetween piece and left edge of the board */
+    /** Space between piece and left edge of the board */
     private final int leftSpace;
     
     /** Color type of the piece */
@@ -43,7 +43,7 @@ public class Piece {
     public Piece(ColorType colorType) {
         this.colorType = colorType;
         points = new ArrayList<>();
-        gostPoints = new ArrayList<>();
+        ghostPoints = new ArrayList<>();
         curRotation = 0;
         leftSpace = (int) Math.floor((Settings.getXCases() - 4d) / 2);
         setPointsAsInitial();
@@ -54,28 +54,28 @@ public class Piece {
      */
     
     /**
+     * Get rotations operations of the piece
      * 
-     * 
-     * @return
+     * @return Rotations operations of the piece
      */
     protected List<List<Point>> getRotationOperations() {
         return null;
     }
     
     /**
+     * Get initial position of the piece
      * 
-     * 
-     * @return
+     * @return Initial position of the piece
      */
     protected List<Point> getInitialPosition() {
         return null;
     }
     
     /**
+     * Get inverted points from list of point
      * 
-     * 
-     * @param points
-     * @return
+     * @param points Points to invert
+     * @return Inverted points
      */
     protected static List<Point> getInversedPoint(List<Point> points) {
         List<Point> i = new ArrayList<>();
@@ -89,10 +89,11 @@ public class Piece {
     }
     
     /**
+     * Initialize position of the piece
      * 
-     * 
-     * @param grid
-     * @return
+     * @param grid Grid of the game
+     * @return true if piece has been initialized,
+     *         else false
      */
     public boolean initPosition(ArrayList<Line> grid) {
         boolean firstFailled = false;
@@ -123,10 +124,11 @@ public class Piece {
     }
     
     /**
+     * Check if the piece can down
      * 
-     * 
-     * @param grid
-     * @return
+     * @param grid Grid of the game
+     * @return true if piece can down,
+     *         else false
      */
     public boolean canDown(ArrayList<Line> grid) {
         return points.stream().noneMatch((p) -> (p.y + 1 >= Settings.getYCases() ||
@@ -134,30 +136,31 @@ public class Piece {
     }
     
     /**
-     * 
+     * Down the piece
      */
     public void down() {
         points.forEach((p) -> p.y++);
     }
     
     /**
+     * Close position of the piece
      * 
-     * 
-     * @return
+     * @return Number of cases between piece and ghost before close
      */
     public int fix() {
-        int diff = this.gostPoints.get(0).y - points.get(0).y;
+        int diff = this.ghostPoints.get(0).y - points.get(0).y;
         points.clear();
-        gostPoints.forEach((p) -> points.add(new Point(p)));
+        ghostPoints.forEach((p) -> points.add(new Point(p)));
         return diff;
     }
 
     /**
+     * Set the x direction of the piece
      * 
-     * 
-     * @param xDirection
-     * @param grid
-     * @return
+     * @param xDirection Desired direction
+     * @param grid       Grid of the game
+     * @return true if piece has been moved,
+     *         else false
      */
     public boolean setXDirection(int xDirection, ArrayList<Line> grid) {
         boolean isMovable = true;
@@ -176,7 +179,11 @@ public class Piece {
     }
     
     /**
+     * Rotate left the piece
      * 
+     * @param grid Grid of the game
+     * @return true if piece has been rotated,
+     *         else false
      */
     public boolean rotateLeft(ArrayList<Line> grid) {
         if (getRotationOperations() == null) {
@@ -188,10 +195,11 @@ public class Piece {
     }
     
     /**
+     * Rotate right the piece
      * 
-     * 
-     * @param grid
-     * @return
+     * @param grid Grid of the game
+     * @return true if piece has been rotated,
+     *         else false
      */
     public boolean rotateRight(ArrayList<Line> grid) {
         if (getRotationOperations() == null) {
@@ -203,12 +211,13 @@ public class Piece {
     }
     
     /**
+     * Rotate the piece
      * 
-     * 
-     * @param grid
-     * @param c
-     * @param n
-     * @return
+     * @param grid Grid of the game
+     * @param c Current rotation operation
+     * @param n Next rotation operation
+     * @return true if piece has been rotated,
+     *         else false
      */
     private boolean rotate(ArrayList<Line> grid, int c, int n) {
         boolean failled = false;
@@ -252,7 +261,7 @@ public class Piece {
     }
     
     /**
-     * 
+     * Initialize points of the piece
      */
     public final void setPointsAsInitial() {
         curRotation = 0;
@@ -261,14 +270,14 @@ public class Piece {
     }
     
     /**
+     * Set up ghost piece position
      * 
-     * 
-     * @param grid
+     * @param grid Grid of the game
      */
     private void setGostPointsPosition(ArrayList<Line> grid) {
         int h = Settings.getYCases() - getMinHeightPoint();
         boolean intersect = false;
-        gostPoints.clear();
+        ghostPoints.clear();
         for (int i = 0; i <= h; i++) {
             for (Point p : points) {
                 if (p.y + i >= Settings.getYCases() || p.y >= 0 &&
@@ -279,7 +288,7 @@ public class Piece {
             }
             if (intersect) {
                 for (Point p : points) {
-                    gostPoints.add(new Point(p.x, p.y + i - 1));
+                    ghostPoints.add(new Point(p.x, p.y + i - 1));
                 }
                 break;
             }
@@ -287,9 +296,9 @@ public class Piece {
     }
     
     /**
+     * Get minimal height of the piece
      * 
-     * 
-     * @return
+     * @return Minimal height of the piece
      */
     private int getMinHeightPoint() {
         int m = points.get(0).y;
@@ -351,12 +360,12 @@ public class Piece {
     }
     
     /**
-     * Get points of the gost piece
+     * Get points of the ghost piece
      * 
-     * @return Points of the gost piece
+     * @return Points of the ghost piece
      */
-    public List<Point> getGostPoints() {
-        return gostPoints;
+    public List<Point> getGhostPoints() {
+        return ghostPoints;
     }
     
     /**

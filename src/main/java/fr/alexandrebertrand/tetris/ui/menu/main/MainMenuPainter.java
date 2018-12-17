@@ -18,23 +18,23 @@ public final class MainMenuPainter {
      * Constants
      */
 
-    /** Name of the game logo file path */
+    /** Name of the game image file path */
     private static final String LOGO_PATH = "/tetris-logo.png";
 
-    /** Name of the game logo file path */
+    /** Name of the game play button file path */
     private static final String PLAY_BTN_PATH = "/play-btn.png";
 
-    /** Name of the game logo file path */
+    /** Name of the game options button file path */
     private static final String OPTIONS_BTN_PATH = "/options-btn.png";
 
-    /** Name of the game logo file path */
+    /** Name of the game exit button file path */
     private static final String EXIT_BTN_PATH = "/exit-btn.png";
 
     /*
      * Attributes
      */
 
-    /** Logo of the game */
+    /** Image of the game */
     private static Image logoImage;
 
     /** Play button of the game */
@@ -50,7 +50,7 @@ public final class MainMenuPainter {
     private static Dimension boardDim;
 
     /*
-     * Constructor
+     * Constructors
      */
 
     /**
@@ -64,7 +64,7 @@ public final class MainMenuPainter {
     }
 
     /*
-     * Method
+     * Methods
      */
 
     /**

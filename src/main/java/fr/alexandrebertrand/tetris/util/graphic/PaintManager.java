@@ -13,7 +13,7 @@ import fr.alexandrebertrand.tetris.util.settings.Settings;
 public final class PaintManager {
 
     /*
-     * Constructor
+     * Constructors
      */
 
     /**

@@ -16,7 +16,7 @@ import fr.alexandrebertrand.tetris.util.settings.*;
 public final class GridPainter {
 
     /*
-     * Constructor
+     * Constructors
      */
 
     /**

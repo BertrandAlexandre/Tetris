@@ -30,7 +30,7 @@ public final class SettingsManager {
             "/resources/app-private.properties";
 
     /*
-     * Constructor
+     * Constructors
      */
     
     /**
@@ -38,6 +38,10 @@ public final class SettingsManager {
      */
     private SettingsManager() {
     }
+    
+    /*
+     * Methods
+     */
 
     /**
      * Read current settings
@@ -58,7 +62,7 @@ public final class SettingsManager {
             Settings.setYCases(Integer.parseInt(p.getProperty("yCases")));
             Settings.setMusicsVolume(Double.parseDouble(p.getProperty("musicsVolume")));
             Settings.setEffectsVolume(Double.parseDouble(p.getProperty("effectsVolume")));
-            Settings.setFrapsPerSecond(Integer.parseInt(p.getProperty("frapsPerSecond")));
+            Settings.setFramesPerSecond(Integer.parseInt(p.getProperty("framesPerSecond")));
 
             Properties pp = new Properties();
             pp.load(SettingsManager.class.getResourceAsStream(privatePropertyFileName));

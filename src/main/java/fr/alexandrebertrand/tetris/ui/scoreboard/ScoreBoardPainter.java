@@ -14,7 +14,7 @@ import fr.alexandrebertrand.tetris.util.settings.Settings;
 public final class ScoreBoardPainter {
 
     /*
-     * Constructor
+     * Constructors
      */
 
     /**
@@ -24,7 +24,7 @@ public final class ScoreBoardPainter {
     }
 
     /*
-     * Method
+     * Methods
      */
 
     /**

@@ -28,7 +28,7 @@ public final class SoundReader {
      * Attributes
      */
 
-    /** Path of the sound ressources directory */
+    /** Path of the sound resources directory */
     private final String path;
 
     /** Medias collection */
@@ -44,14 +44,14 @@ public final class SoundReader {
     private int nbPlayers;
 
     /*
-     * Constructor
+     * Constructors
      */
 
     /**
-     * Default constructor to initialise medias and players
+     * Default constructor to initialize medias and players
      * 
      * @param volume Volume of sounds
-     * @param prefix Prefix of the sound ressources directory
+     * @param prefix Prefix of the sound resources directory
      */
     public SoundReader(double volume, String prefix) {
         this.volume = volume;
@@ -109,7 +109,7 @@ public final class SoundReader {
     }
 
     /**
-     * Initilize volume of sound players with
+     * Initialize volume of sound players with
      * volume of the sound reader
      */
     public void initializePlayersVolume() {
@@ -134,7 +134,7 @@ public final class SoundReader {
     }
 
     /*
-     * Setter
+     * Getters & Setters
      */
 
     /**
